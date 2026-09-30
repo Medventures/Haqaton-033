@@ -64,33 +64,6 @@
   .pay { display: flex; gap: 8px; margin: 2px 0 10px; }
   .tag { font-size: 13px; font-weight: 700; padding: 3px 9px; border-radius: 999px; }
   .tag.f { background: #DCFCE7; color: #166534; } .tag.p { background: #E0F2FE; color: #075985; }
-
-  /* слайд «Демо» */
-  .g3 { display: grid; grid-template-columns: 380px 1fr; gap: 26px; }
-  .form .q { display: flex; justify-content: space-between; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 15.5px; }
-  .form .q:last-of-type { border-bottom: 0; }
-  .form .q span { color: var(--muted); }
-  .form .q b { text-align: right; }
-  .btn { margin-top: 14px; background: var(--teal); color: #fff; font-weight: 700; font-size: 16px; text-align: center; border-radius: 10px; padding: 12px; }
-  .alarm { margin-top: 14px; background: #FEF2F2; border: 1.5px solid #FCA5A5; border-radius: 10px; padding: 11px 14px; font-size: 14px; color: #991B1B; line-height: 1.4; }
-  .res { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
-  .blk { border-radius: 16px; padding: 20px 20px; border: 1px solid var(--line); background: #fff; }
-  .blk.free { border-top: 5px solid var(--green); }
-  .blk.paid { border-top: 5px solid var(--blue); }
-  .blk.route { border-top: 5px solid var(--violet); }
-  .blk .lbl { font-size: 13px; font-weight: 800; letter-spacing: 0.05em; }
-  .blk.free .lbl { color: var(--green); } .blk.paid .lbl { color: var(--blue); } .blk.route .lbl { color: var(--violet); }
-  .blk h3 { font-size: 18px; margin: 6px 0 10px; }
-  .blk ul { list-style: none; }
-  .blk li { font-size: 14.5px; line-height: 1.35; padding-left: 16px; position: relative; margin-bottom: 7px; }
-  .blk li::before { content: "•"; position: absolute; left: 2px; color: var(--muted); }
-  .blk ol { padding-left: 20px; }
-  .blk ol li { padding-left: 2px; }
-  .blk ol li::before { content: none; }
-  .why { font-size: 13px; color: var(--muted); line-height: 1.35; margin-top: 8px; border-top: 1px dashed var(--line); padding-top: 8px; }
-  .flag { display: inline-block; background: #FEF3C7; color: #92400E; font-size: 12px; font-weight: 700; padding: 1px 7px; border-radius: 999px; margin-left: 4px; }
-  .next { margin-top: 18px; background: var(--dark); color: #CBD5E1; border-radius: 14px; padding: 16px 22px; font-size: 15.5px; display: flex; gap: 28px; align-items: center; }
-  .next b { color: #fff; }
 </style>
 </head>
 <body>
@@ -148,75 +121,6 @@
       <div class="k">⚡ ГЛАВНОЕ ПРЕИМУЩЕСТВО</div>
       <h3>У каждой рекомендации — источник</h3>
       <p>Бесплатное по приказу МЗ РК ДСМ-174/2020 показываем честно, платное PRIME — с объяснением «почему». Диагноз не ставим: решение за врачом.</p>
-    </div>
-  </div>
-  <div class="foot">Команда Qorgan</div>
-</section>
-
-<!-- ============ СЛАЙД «ДЕМО» (запасной, если живое демо не запустится) ============
-     Содержимое посчитано по spec/rules.json для примера из spec/QUESTIONNAIRE.md:
-     женщина 1984 г.р. (42 в 2026), не на учёте, прикреплена к Green Clinic, жалоба «усталость». -->
-<section class="slide">
-  <div class="kicker teal"><svg viewBox="0 0 24 24" fill="none" stroke="#0D9488" stroke-width="2.2"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Демо</div>
-  <h1>Минута анкеты → честный ответ в три блока</h1>
-  <div class="rule"></div>
-
-  <div class="g3">
-    <div class="card form">
-      <div class="ch"><div class="ico" style="background:#CCFBF1">📝</div><h2>Анкета пациента</h2></div>
-      <div class="q"><span>Для кого</span><b>Для себя</b></div>
-      <div class="q"><span>Пол, год рождения</span><b>Женщина, 1984</b></div>
-      <div class="q"><span>Беспокоит прямо сейчас?</span><b>Нет</b></div>
-      <div class="q"><span>На учёте по заболеванию</span><b>Нет</b></div>
-      <div class="q"><span>Прикреплена к поликлинике</span><b>Green Clinic</b></div>
-      <div class="q"><span>Жалобы</span><b>Усталость</b></div>
-      <div class="btn">Подобрать чекап</div>
-      <div class="alarm">Боль в груди, одышка, признаки инсульта → анкета останавливается: «звоните 103». Это не чекап.</div>
-    </div>
-
-    <div>
-      <div class="res">
-        <div class="blk free">
-          <div class="lbl">1 · ПОЛОЖЕНО БЕСПЛАТНО</div>
-          <h3>Госскрининг в 42 года</h3>
-          <ul>
-            <li>Маммография</li>
-            <li>ПАП-тест</li>
-            <li>Холестерин ЛПНП, триглицериды, гликированный гемоглобин</li>
-            <li>Внутриглазное давление</li>
-            <li>Анализ на гепатиты B и C</li>
-          </ul>
-          <div class="why">Где: Green Clinic, по прикреплению. Срок — 60 дней.<br>Основание: приказ МЗ РК ДСМ-174/2020 (ред. № 75 от 10.07.2026)</div>
-        </div>
-        <div class="blk paid">
-          <div class="lbl">2 · ПАКЕТ PRIME 40+</div>
-          <h3>Чего нет в госскрининге</h3>
-          <ul>
-            <li>КТ грудной клетки</li>
-            <li>ЭхоКГ, УЗДГ артерий шеи и ног</li>
-            <li>Гастро- и колоноскопия под анестезией</li>
-            <li>Онкомаркеры, УЗИ малого таза</li>
-            <li>Витамин D, B12, анемия, щитовидная железа <span class="flag">подтверждает врач</span></li>
-          </ul>
-          <div class="why">Маммографию и ПАП-тест из пакета не продаём — они положены бесплатно</div>
-        </div>
-        <div class="blk route">
-          <div class="lbl">3 · МАРШРУТ НА ОДИН ДЕНЬ</div>
-          <h3>В PRIME</h3>
-          <ol>
-            <li>Анализы натощак</li>
-            <li>УЗИ, ЭхоКГ, УЗДГ</li>
-            <li>КТ</li>
-            <li>Консультации</li>
-            <li>Эндоскопия под анестезией — последней</li>
-            <li>Заключение врача-куратора</li>
-          </ol>
-        </div>
-      </div>
-      <div class="next">
-        <div>🔁 <b>Следующий визит:</b> сердце и грудь — 2028, гепатиты — 2029, ПАП-тест — 2030</div>
-        <div>📅 <b>Записаться</b> — одной кнопкой</div>
-      </div>
     </div>
   </div>
   <div class="foot">Команда Qorgan</div>
