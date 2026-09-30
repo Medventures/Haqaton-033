@@ -9,7 +9,7 @@
 | `sex` | select | `M` / `F` | да |
 | `birth_year` | number | 1920–2025 | да |
 | `checkup_year` | number | по умолчанию текущий (2026) | нет |
-| `registered` | multiselect | `hypertension` АГ · `ihd` ИБС · `diabetes` СД · `glaucoma` глаукома · `cerebrovascular` · `breast_cancer` · `cervical_cancer` · `colorectal` — «состою на учёте (динамическое наблюдение)» | нет |
+| `registered` | multiselect | `hypertension` АГ · `ihd` ИБС · `diabetes` СД · `glaucoma` глаукома · `cerebrovascular` · `breast_cancer` · `cervical_cancer` · `colorectal` · `lung_cancer` · `chronic_hepatitis` — «состою на учёте (динамическое наблюдение)» | нет |
 | `complaints` | multiselect | `fatigue` усталость · `chest_pain` боль в груди | нет |
 | `family_history` | multiselect | `colorectal_cancer` рак кишечника у родственника | нет |
 | `risk_group` | multiselect | группы риска по гепатитам (см. `rules.json`, `scr_hepatitis`) | нет |
@@ -17,7 +17,24 @@
 | `urgent` | select | `chest_pain` · `dyspnea` · `stroke_signs` · `none` → любой кроме `none` = красный флаг, пакет не предлагать | да |
 | `pregnant` | select | `yes` · `no` · `unsure` (Ж 18–55) → без КТ/маммографии/рентгена, «обсудите с врачом» | нет |
 | `attached_to` | select | `green_clinic` · `other` · `unknown` → где делать бесплатную часть | нет |
+| `smoking` | dict | `{"pack_years": 25, "quit_years_ago": 0}` — для скрининга лёгких (№ 75) | нет |
+| `hazardous_work_10y` | bool | 10 лет на вредном производстве | нет |
 | `last_screening` | dict | `{"scr_breast": 2025, ...}` — год последнего скрининга; если не прошёл период — не предлагать | нет |
+
+Анкета (30.09.2026) передаёт ещё поля для врача и для блока «Сверх пакета» — на бесплатный скрининг не влияют:
+| Поле | Тип | Значения |
+|---|---|---|
+| `birth_date` | date | `ГГГГ-ММ-ДД`; `birth_year` берётся из неё. Пакет клиники — по полным годам, скрининг — по году (приказ) |
+| `conditions` | multiselect | что есть или было, простыми словами: `pressure` · `heart` · `diabetes` · `glaucoma` · `head_vessels` · `legs` · `breast` · `hpv` · `bowel` · `lungs` · `tb` · `hepatitis` · `urine` · `bleeding`; `registered` = отмеченные из них «на учёте», переведённые в коды выше |
+| `conditions_other` | text | свой вариант |
+| `last_period` | date | Ж: начало последних месячных |
+| `pregnancies`, `births` | number | Ж: беременностей, родов |
+| `contraception` | select | `none` · `condom` · `pills` · `iud` · `other` · `not_needed` |
+| `discharge` / `dysuria` | select | Ж: выделения, запах / М: боль, жжение при мочеиспускании, выделения — `yes` → «Сверх пакета»: обследование на половые инфекции (состав назначает врач) + гинеколог/уролог, если их нет в пакете |
+| `anesthesia_reaction`, `blood_thinners`, `allergy`, `companion` | select | наркоз, разжижающие кровь, аллергия, есть ли сопровождающий (после наркоза нельзя за руль) |
+| `medications` | text | что принимает сейчас |
+| `family_history` | multiselect | + `breast_cancer` · `other_cancer` · `early_cvd` · `hypertension` · `diabetes` · `tb` |
+`complaints` анкета больше не спрашивает (решение медэксперта 30.09.2026): жалобы убраны, болезни в семье расширены.
 
 ## Выход
 ```json
