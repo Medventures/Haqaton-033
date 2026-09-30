@@ -14,6 +14,7 @@ let fields = [];
 let answers = {};
 let step = 0;
 let submitting = false;
+let recommendation = null;
 const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (c) => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
 const year = () => Number(answers.checkup_year || new Date().getFullYear());
 const birthYear = () => answers.birth_date ? Number(answers.birth_date.slice(0, 4)) : undefined;
@@ -80,6 +81,10 @@ function renderField(field) {
   return `<${tag} class="field" data-name="${field.name}">${input}${hint ? `<p class="hint" id="${id}-hint">${escapeHtml(hint)}</p>` : ''}</${tag}>`;
 }
 function render(focus = false) {
+  recommendation = null;
+  $('itinerary-screen').hidden = true;
+  $('itinerary-content').replaceChildren();
+  $('package-confirmation').hidden = true;
   $('results-screen').hidden = true;
   $('recommendation').hidden = true;
   $('recommendation').replaceChildren();
@@ -168,6 +173,51 @@ $('results-back').addEventListener('click', () => {
   render(true);
   $('form-panel').scrollIntoView({ block: 'start' });
 });
+$('package-edit').addEventListener('click', () => $('results-back').click());
+$('itinerary-back').addEventListener('click', showResultsScreen);
+$('package-proceed').addEventListener('click', () => {
+  if (!recommendation?.package || recommendation.red_flags.length || !recommendation.itinerary?.length) return;
+  const data = recommendation;
+  const matchesExams = (instruction, exams) => exams.some((exam) => instruction.match.some((word) => exam.toLocaleLowerCase('ru').includes(word.toLocaleLowerCase('ru'))));
+  const preparation = (data.preparation || []).filter((instruction) => matchesExams(instruction, data.package.exams));
+  const advancePreparation = preparation.filter((instruction) => ['now', 'eve'].includes(instruction.day));
+  $('itinerary-content').innerHTML = `<div class="package-card"><span class="eyebrow">ВЫ ВЫБРАЛИ</span><h3>${escapeHtml(data.package.name)}</h3><p>Маршрут включает обследования выбранного пакета. Бесплатные скрининги и услуги сверх пакета согласуются отдельно.</p></div>` +
+    (preparation.length ? '<p class="prep-timing-note">Подготовьтесь до визита: инструкции указаны ниже и у соответствующих этапов. Время процедур и подготовки согласуйте с клиникой — часы в этом маршруте примерные.</p>' : '') +
+    (advancePreparation.length ? `<section class="advance-preparation" aria-labelledby="advance-preparation-title"><h3 id="advance-preparation-title">Что сделать заранее</h3>${renderPreparation(advancePreparation)}</section>` : '') +
+    '<ol class="day-route">' + data.itinerary.map((stop, index) => {
+      const instructions = preparation.filter((instruction) => instruction.day === 'after'
+        ? index === data.itinerary.length - 1 : matchesExams(instruction, stop.exams));
+      return `<li class="route-stop"><span class="route-time">${escapeHtml(stop.time)}</span><div><h3>${escapeHtml(stop.title)}</h3><p class="route-location">${escapeHtml(stop.location)}</p>${renderPreparation(instructions)}${stop.exams.length ? `<ul class="exam-list">${stop.exams.map((exam) => `<li>${escapeHtml(exam)}</li>`).join('')}</ul>` : ''}${stop.note ? `<p class="hint">${escapeHtml(stop.note)}</p>` : ''}</div></li>`;
+    }).join('') + '</ol>';
+  $('results-screen').hidden = true;
+  $('itinerary-screen').hidden = false;
+  $('step-counter').textContent = 'ВАШ ДЕНЬ В КЛИНИКЕ';
+  $('step-title').textContent = 'Маршрут на один день';
+  $('step-description').textContent = 'Примерный план посещения по выбранной программе обследования.';
+  focusScreen();
+});
+
+function renderPreparation(instructions) {
+  const timing = {now: 'Заранее · обсудите с врачом', eve: 'Накануне визита', morning: 'До процедуры', after: 'После процедуры'};
+  return instructions.map((instruction) => `<section class="preparation-card" data-preparation="${escapeHtml(instruction.id)}"><span class="prep-label">${escapeHtml(timing[instruction.day] || 'Подготовка')}</span><h4>${escapeHtml(instruction.title)}</h4><p>${escapeHtml(instruction.text)}</p></section>`).join('');
+}
+
+function focusScreen() {
+  $('step-title').focus();
+  $('form-panel').scrollIntoView({ block: 'start' });
+}
+
+function showResultsScreen() {
+  form.hidden = true;
+  $('review').hidden = true;
+  $('itinerary-screen').hidden = true;
+  $('results-screen').hidden = false;
+  document.querySelector('.progress-track').hidden = true;
+  $('step-counter').textContent = 'РЕЗУЛЬТАТ ПОДБОРА';
+  $('step-title').textContent = 'Ваша программа обследования';
+  $('step-description').textContent = 'Программа подобрана по вашим ответам. Состав обследований необходимо обсудить с врачом.';
+  focusScreen();
+}
 function collectInput() {
   const payload = {};
   for (const field of fields.filter(visible)) {
@@ -225,17 +275,11 @@ async function submitRecommendation() {
     if (!response.ok || data.error) throw new Error(data.error || 'Не удалось подобрать программу. Попробуйте снова.');
     if (!Array.isArray(data.items) || !Array.isArray(data.red_flags)) throw new Error('Сервер вернул неполный результат. Попробуйте снова.');
     renderRecommendation(data);
+    recommendation = data;
+    $('package-confirmation').hidden = !data.package || data.red_flags.length > 0 || !data.itinerary?.length;
     $('recommend-status').textContent = 'Ответ сервера получен.';
     button.textContent = 'Подобрать ещё раз';
-    form.hidden = true;
-    $('review').hidden = true;
-    $('results-screen').hidden = false;
-    document.querySelector('.progress-track').hidden = true;
-    $('step-counter').textContent = 'РЕЗУЛЬТАТ ПОДБОРА';
-    $('step-title').textContent = 'Ваша программа обследования';
-    $('step-description').textContent = 'Программа подобрана по вашим ответам. Состав обследований необходимо обсудить с врачом.';
-    $('step-title').focus();
-    $('form-panel').scrollIntoView({ block: 'start' });
+    showResultsScreen();
   } catch (error) {
     $('recommend-status').textContent = '';
     $('recommend-error').textContent = error.name === 'AbortError'

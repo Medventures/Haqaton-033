@@ -48,6 +48,26 @@ const baseURL = process.env.APP_URL || 'http://localhost:8000';
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     await page.screenshot({ path: 'app/recommendation-mobile.png', fullPage: true });
 
+    const packageTitle = await page.locator('#result-title').innerText();
+    await page.locator('#package-proceed').click();
+    assert.equal(await page.locator('#results-screen').isHidden(), true);
+    assert.equal(await page.locator('#itinerary-screen').isVisible(), true);
+    assert.equal(await page.locator('#step-title').innerText(), 'Маршрут на один день');
+    assert.match(await page.locator('#itinerary-screen').innerText(), /время и кабинеты условные/);
+    assert.equal(await page.locator('#itinerary-content .package-card h3').innerText(), packageTitle);
+    assert.ok(await page.locator('.route-stop').count() > 2);
+    assert.equal(await page.locator('.advance-preparation [data-preparation="pr_colon"]').isVisible(), true);
+    assert.equal(await page.locator('.route-stop').filter({ has: page.getByRole('heading', { name: 'Анализы', exact: true }) }).locator('[data-preparation="pr_blood"]').isVisible(), true);
+    assert.equal(await page.locator('.route-stop').filter({ has: page.getByRole('heading', { name: 'Эндоскопия', exact: true }) }).locator('[data-preparation="pr_gastro"]').isVisible(), true);
+    assert.equal(await page.locator('.route-stop').last().locator('[data-preparation="pr_anesthesia"]').isVisible(), true);
+    assert.equal(await page.locator('#itinerary-content [data-preparation="pr_thinners"]').count(), 0);
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+    await page.screenshot({ path: 'app/itinerary-mobile.png', fullPage: true });
+    await page.setViewportSize({ width: 1366, height: 900 });
+    await page.screenshot({ path: 'app/itinerary-desktop.png', fullPage: true });
+    await page.locator('#itinerary-back').click();
+    assert.equal(await page.locator('#result-title').innerText(), packageTitle);
+    assert.equal(await page.locator('#itinerary-screen').isHidden(), true);
     await page.locator('#results-back').click();
     assert.equal(await page.locator('#review').isVisible(), true);
     assert.equal(await page.locator('#results-screen').isHidden(), true);
@@ -68,6 +88,12 @@ const baseURL = process.env.APP_URL || 'http://localhost:8000';
     await page.locator('#recommend').click();
     await page.locator('#result-title').waitFor();
     assert.match(await page.locator('#result-title').innerText(), /Мужской расширенный/);
+    await page.locator('#package-proceed').click();
+    assert.match(await page.locator('#itinerary-content .package-card h3').innerText(), /Мужской расширенный/);
+    assert.equal(await page.locator('#itinerary-content').getByText('Консультация гинеколога', { exact: true }).count(), 0);
+    await page.locator('#itinerary-back').click();
+    await page.locator('#package-edit').click();
+    assert.equal(await page.locator('#review').isVisible(), true);
     assert.deepEqual(errors, []);
 
     const invalid = await page.request.post(`${baseURL}/recommendations`, { data: { sex: 'X' } });
@@ -78,7 +104,7 @@ const baseURL = process.env.APP_URL || 'http://localhost:8000';
     const urgentData = await urgent.json();
     assert.equal(urgentData.package, null);
     assert.equal(urgentData.red_flags.length, 1);
-    console.log('Browser checks passed: submission, loading, results, mobile, failure/retry, editing, API validation and urgent guard.');
+    console.log('Browser checks passed: submission, loading, results, mobile, itinerary, back/edit navigation, failure/retry, API validation and urgent guard.');
   } finally {
     await browser.close();
   }

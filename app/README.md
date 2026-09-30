@@ -36,6 +36,17 @@ The UI disables repeat submissions during loading, times out after 20 seconds,
 allows retry without losing answers and clears old results when answers are edited.
 Successful selection opens a separate results screen with the same recommendation
 contents. “Вернуться к ответам” returns to the editable review with answers intact.
+“Продолжить с этим пакетом” opens a separate “Маршрут на один день” screen.
+The server groups only the selected package's examinations into an illustrative
+day itinerary (`app/itinerary.py`). Times, durations and room numbers are generic
+demo data, clearly labeled in the UI; no appointment is booked. Free screenings
+and extra services are not silently added to the package itinerary. Users can
+return to the recommendation or change answers; resubmission builds a fresh route.
+Preparation from the existing rules is displayed in expanded, highlighted cards
+beside the relevant itinerary stops. Advance and previous-day preparation also
+appears above the itinerary; after-procedure guidance appears at the final stop.
+Only instructions matching the selected package are included, preserving answer
+conditions such as blood-thinner use. Demo times are not preparation deadlines.
 
 ## Extending the form
 

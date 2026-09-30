@@ -490,6 +490,79 @@ h2:focus {
 .recommend-button {
   width:100%;
 }
+.day-route {
+  list-style:none;
+  padding:0;
+  margin:24px 0;
+}
+.route-stop {
+  display:grid;
+  grid-template-columns:55px minmax(0,1fr);
+  gap:16px;
+  padding:0 0 25px;
+  margin-bottom:22px;
+  border-bottom:1px solid #e5ece7;
+}
+.route-time {
+  background:#edf7f0;
+  color:#167953;
+  padding:8px 5px;
+  border-radius:8px;
+  font-size:12px;
+  align-self:start;
+  text-align:center;
+}
+.route-stop h3 {
+  font-size:14px;
+  font-weight:500;
+  line-height:1.6;
+  margin:3px 0 8px;
+}
+.route-location {
+  font-size:11px;
+  color:var(--muted);
+  line-height:1.7;
+  margin:0;
+}
+#itinerary-content {
+  overflow-wrap:anywhere;
+}
+.advance-preparation>h3 {
+  font-size:16px;
+  font-weight:500;
+  margin:24px 0 14px;
+}
+.preparation-card {
+  background:#fff7e9;
+  border:1px solid #f0d2a4;
+  border-left:3px solid #d59c45;
+  border-radius:10px;
+  padding:15px;
+  margin:14px 0;
+}
+.prep-label {
+  display:block;
+  font-size:10px;
+  font-weight:500;
+  color:#79551f;
+  line-height:1.6;
+}
+.preparation-card h4 {
+  font-size:13px;
+  font-weight:500;
+  line-height:1.6;
+  margin:7px 0;
+}
+.preparation-card p,.prep-timing-note {
+  font-size:12px;
+  line-height:1.8;
+  margin:0;
+}
+.prep-timing-note {
+  padding:16px;
+  background:#edf7f0;
+  border-radius:10px;
+}
 .request-error {
   color:#852a20;
   font-size:12px;

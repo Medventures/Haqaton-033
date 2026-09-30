@@ -89,6 +89,25 @@ class RecommendationTests(unittest.TestCase):
         child = recommend(patient(10))
         self.assertNotIn("pr_colon", [item["id"] for item in child["preparation"]])
 
+    def test_itinerary_contains_only_selected_package_exams(self):
+        for age, changes in [(10, {}), (30, {}), (42, {"pregnant": "yes"}),
+                             (50, {"conditions": ["diabetes"]})]:
+            result = recommend(patient(age, **changes))
+            scheduled = [exam for stop in result["itinerary"] for exam in stop["exams"]]
+            self.assertCountEqual(scheduled, result["package"]["exams"])
+            times = [stop["time"] for stop in result["itinerary"]]
+            self.assertEqual(times, sorted(times))
+            self.assertEqual(result["itinerary"][-1]["title"], "Завершение визита")
+            if any("колоноскопия" in exam.lower() for exam in scheduled):
+                self.assertEqual(result["itinerary"][-2]["title"], "Эндоскопия")
+            for stop in result["itinerary"]:
+                if stop["title"] == "Лучевая диагностика":
+                    self.assertNotIn("Тест на хеликобактер", stop["exams"])
+
+    def test_no_itinerary_without_package(self):
+        self.assertEqual(recommend(patient(urgent="chest_pain"))["itinerary"], [])
+        self.assertEqual(recommend(patient(birth_date="2025-01-01", checkup_year=2025))["itinerary"], [])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -5,6 +5,7 @@ from datetime import date
 from pathlib import Path
 
 from app.config.fields import FIELDS
+from app.itinerary import build_itinerary
 
 RULES = json.loads((Path(__file__).resolve().parents[1] / "spec" / "rules.json").read_text(encoding="utf-8"))
 
@@ -125,7 +126,7 @@ def recommend(payload):
     result = dict(age_year=age, package=None, items=[], screenings=[], additions=[],
                   not_eligible=[], red_flags=[], warnings=[], preparation=[], next_visit=[],
                   summary={"free_count": 0, "paid_count": 0}, needs_doctor_review=True,
-                  model_version="app-rules-1", error=None)
+                  model_version="app-rules-1", error=None, itinerary=[])
     if answers["urgent"] != "none":
         result["red_flags"] = ["При этих симптомах чекап не подходит. Звоните 103 или обратитесь к врачу сегодня."]
         return result
@@ -208,4 +209,5 @@ def recommend(payload):
         "free_count": sum(item["payment"].startswith("free_") for item in result["items"]),
         "paid_count": sum(item["payment"] == "paid_prime" for item in result["items"]),
     }
+    result["itinerary"] = build_itinerary(result["package"])
     return result
