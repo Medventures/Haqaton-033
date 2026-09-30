@@ -28,36 +28,36 @@ Python-движок применяет правила из `spec/rules.json`: п
 
 ## Запуск
 
-**Требования:** Python 3.10+ (по данным проекта, проверено на 3.12 и 3.13), браузер и интернет для установки зависимостей. Команды выполняются из корня скачанного или клонированного репозитория.
+**Требования:** Python 3.10+, браузер и интернет для установки зависимостей. Команды выполняются из корня скачанного или клонированного репозитория.
 
 **Windows (PowerShell):**
 
 ```powershell
 python -m venv .venv
-pip install -r requirements.txt
-uvicorn app:app --port 8010
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m uvicorn app:app --port 8010
 ```
 
 **macOS / Linux:**
 
 ```bash
 python3 -m venv .venv
-pip install -r requirements.txt
-uvicorn app:app --port 8010
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python -m uvicorn app:app --port 8010
 ```
 
-Откройте [анкету](http://localhost:8010) или [остальные экраны приложения](http://localhost:8010/app). Если порт занят, замените `--port 8010` на `--port 8011`.
+Откройте [анкету](http://localhost:8010) или [остальные экраны приложения](http://localhost:8010/app). Если порт занят, замените `--port 8010` на `--port 8011` и используйте этот же порт в адресе браузера. Для остановки сервера нажмите `Ctrl+C`.
 
 **Переменные окружения:** не требуются. Файл `.env`, API-ключи и подключение к базе данных для локального запуска не нужны. Правила и параметры кабинетов задаются в `spec/rules.json`.
 
 **Проверки (Windows):**
 
 ```powershell
-.venv\Scripts\python.exe -m pytest -q
-.venv\Scripts\python.exe tools/run_ml_scenarios.py
+.\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe tools/run_ml_scenarios.py
 ```
 
-На macOS / Linux используйте `.venv/bin/python` вместо `.venv\Scripts\python.exe`. Отчёт прогона сценариев находится в [spec/scenarios_ml/REPORT.md](spec/scenarios_ml/REPORT.md).
+Запускайте проверки после установки зависимостей, в отдельном терминале, если сервер уже работает. На macOS / Linux используйте `.venv/bin/python` вместо `.\.venv\Scripts\python.exe`. Прогон сценариев перезаписывает [spec/scenarios_ml/REPORT.md](spec/scenarios_ml/REPORT.md); он также вызывается одним из тестов `pytest`.
 
 ## Структура проекта
 
