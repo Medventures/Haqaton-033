@@ -21,17 +21,12 @@
       <h1>Первый шаг <br>к заботе <br><span>о себе.</span></h1>
       <p class="intro-copy">Расскажите немного о себе, чтобы подобрать программу обследования.</p>
       <div class="time-note"><span aria-hidden="true">◷</span> Всего 1–2 минуты</div>
-      <ol class="steps" aria-label="Этапы анкеты">
-        <li data-step="0"><span class="step-number">01</span><div><strong>О вас</strong><small>Основная информация</small></div></li>
-        <li data-step="1"><span class="step-number">02</span><div><strong>Самочувствие</strong><small>Что важно учесть сейчас</small></div></li>
-        <li data-step="2"><span class="step-number">03</span><div><strong>История здоровья</strong><small>Наблюдение и обследования</small></div></li>
-        <li data-step="3"><span class="step-number">04</span><div><strong>Ещё немного о вас</strong><small>Жалобы и семейная история</small></div></li>
-      </ol>
+      <ol class="steps" id="steps-nav" aria-label="Этапы анкеты"></ol>
       <div class="privacy-note"><span aria-hidden="true">↳</span><p>Без имени, ИИН и телефона.<br>Ответы остаются в этой вкладке.</p></div>
     </aside>
     <section class="form-panel" id="form-panel" aria-labelledby="step-title">
-      <div class="panel-top"><span id="step-counter">ШАГ 01 / 04</span><span>АНКЕТА ЗДОРОВЬЯ</span></div>
-      <div class="progress-track" role="progressbar" aria-label="Прогресс анкеты" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0"><span id="progress-fill"></span></div>
+      <div class="panel-top"><span id="step-counter">ШАГ 01</span><span>АНКЕТА ЗДОРОВЬЯ</span></div>
+      <div class="progress-track" role="progressbar" aria-label="Прогресс анкеты" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0"><span id="progress-fill"></span></div>
       <h2 id="step-title" tabindex="-1">Давайте познакомимся</h2>
       <p id="step-description" class="description">Начнём с основного. Это поможет учесть возраст и пол при подборе обследований.</p>
       <p id="load-error" role="alert" hidden></p>
@@ -52,6 +47,7 @@
         </div>
       </form>
       <section id="review" hidden aria-label="Проверка ответов"></section>
+      <section id="result" hidden aria-label="Программа обследования"></section>
       <div class="panel-note"><span aria-hidden="true">✳</span><p>Анкета не ставит диагноз.<br>Программу обследования необходимо обсудить с врачом.</p></div>
     </section>
   </main>

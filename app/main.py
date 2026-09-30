@@ -1,3 +1,4 @@
+import json
 import sys
 from pathlib import Path
 
@@ -11,7 +12,7 @@ sys.path.insert(0, str(ROOT))
 
 from contract.predict_contract import predict  # noqa: E402
 from app.offline import cache  # noqa: E402
-from app.config.fields import FIELDS  # noqa: E402
+from app.config.fields import FIELDS, STEPS  # noqa: E402
 
 app = FastAPI(title="MedHub app")
 
@@ -32,6 +33,17 @@ def health():
 @app.get("/fields")
 def fields():
     return FIELDS
+
+
+@app.get("/steps")
+def steps():
+    return STEPS
+
+
+@app.get("/rules")
+def rules():
+    """Правила подбора (spec/rules.json) — форма считает результат по ним, как и движок."""
+    return json.loads((ROOT / "spec" / "rules.json").read_text(encoding="utf-8"))
 
 
 @app.post("/predict")
