@@ -1,20 +1,12 @@
-import json
-import sys
 from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-# contract/ and ml/ sit next to app/ at the repo root
-ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT))
+from app.config.fields import FIELDS
 
-from contract.predict_contract import predict  # noqa: E402
-from app.offline import cache  # noqa: E402
-from app.config.fields import FIELDS, STEPS  # noqa: E402
-
-app = FastAPI(title="MedHub app")
+app = FastAPI(title="Green Clinic questionnaire")
 
 STATIC_DIR = Path(__file__).parent / "static"
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
@@ -27,35 +19,9 @@ def index():
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "demo_mode": cache.mode()}
+    return {"status": "ok"}
 
 
 @app.get("/fields")
 def fields():
     return FIELDS
-
-
-@app.get("/steps")
-def steps():
-    return STEPS
-
-
-@app.get("/rules")
-def rules():
-    """Правила подбора (spec/rules.json) — форма считает результат по ним, как и движок."""
-    return json.loads((ROOT / "spec" / "rules.json").read_text(encoding="utf-8"))
-
-
-@app.post("/predict")
-def run_predict(patient: dict):
-    mode = cache.mode()
-
-    if mode == "offline":
-        return cache.offline_or_fallback(patient)
-
-    output = predict(patient)
-
-    if mode == "record":
-        cache.record(patient, output)
-
-    return output
