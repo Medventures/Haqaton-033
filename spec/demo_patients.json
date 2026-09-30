@@ -1,0 +1,890 @@
+{
+ "_about": "25 синтетических пациентов: 24 — по одному состоянию на карточку Scenarios.docx (ветка ml, 25 карточек / 48 состояний). Демо: все проходят анкета → программа → согласие → подготовка → запись по дням → карта. 25-й — пациентка автопоказа ▶ Демо (карточка S25 проверяет только слоты расписания, анкеты в ней нет).",
+ "patients": [
+  {
+   "name": "S01 · Женский базовый пресет 35 лет",
+   "input": {
+    "sex": "F",
+    "for_child": false,
+    "birth_date": "1991-05-12",
+    "urgent": "none",
+    "attached_to": "green_clinic",
+    "conditions": [],
+    "registered": [],
+    "family_history": [],
+    "anesthesia_reaction": "no",
+    "blood_thinners": "no",
+    "allergy": "no",
+    "companion": "yes",
+    "medications": "Препаратов не принимает",
+    "conditions_other": "",
+    "last_screening": {},
+    "provenance": {
+     "questionnaire": "744d7f79e6872a31572dda9d75269a8a8b7bcd4a",
+     "registered": "confirmed_clinician",
+     "last_screening": "explicit_patient_history"
+    },
+    "smoking": {
+     "pack_years": 0
+    },
+    "hazardous_work_10y": false,
+    "risk_group": [],
+    "discharge": "no",
+    "pregnant": "no",
+    "pregnancies": 0,
+    "births": 0,
+    "contraception": "condom",
+    "last_period": "2026-09-10",
+    "checkup_year": 2026,
+    "visit_date": "2026-09-30"
+   },
+   "from": "Scenarios.docx (ветка ml), состояние S01-A"
+  },
+  {
+   "name": "S02 · Мужской расширенный пресет 42 года",
+   "input": {
+    "sex": "M",
+    "for_child": false,
+    "birth_date": "1984-05-12",
+    "urgent": "none",
+    "attached_to": "green_clinic",
+    "conditions": [],
+    "registered": [],
+    "family_history": [],
+    "anesthesia_reaction": "no",
+    "blood_thinners": "no",
+    "allergy": "no",
+    "companion": "yes",
+    "medications": "Препаратов не принимает",
+    "conditions_other": "",
+    "last_screening": {},
+    "provenance": {
+     "questionnaire": "744d7f79e6872a31572dda9d75269a8a8b7bcd4a",
+     "registered": "confirmed_clinician",
+     "last_screening": "explicit_patient_history"
+    },
+    "smoking": {
+     "pack_years": 0
+    },
+    "hazardous_work_10y": false,
+    "risk_group": [],
+    "dysuria": "no",
+    "checkup_year": 2026,
+    "visit_date": "2026-09-30"
+   },
+   "from": "Scenarios.docx (ветка ml), состояние S02-A"
+  },
+  {
+   "name": "S03 · Детский mini без смешения с extended",
+   "input": {
+    "sex": "M",
+    "for_child": true,
+    "birth_date": "2016-05-12",
+    "urgent": "none",
+    "attached_to": "green_clinic",
+    "conditions": [],
+    "registered": [],
+    "family_history": [],
+    "anesthesia_reaction": "no",
+    "blood_thinners": "no",
+    "allergy": "no",
+    "companion": "yes",
+    "medications": "Препаратов не принимает",
+    "conditions_other": "",
+    "last_screening": {},
+    "provenance": {
+     "questionnaire": "744d7f79e6872a31572dda9d75269a8a8b7bcd4a",
+     "registered": "confirmed_clinician",
+     "last_screening": "explicit_patient_history"
+    },
+    "checkup_year": 2026,
+    "visit_date": "2026-09-30"
+   },
+   "from": "Scenarios.docx (ветка ml), состояние S03-A"
+  },
+  {
+   "name": "S04 · День рождения 17 затем 18 лет",
+   "input": {
+    "sex": "M",
+    "for_child": true,
+    "birth_date": "2008-10-01",
+    "urgent": "none",
+    "attached_to": "green_clinic",
+    "conditions": [],
+    "registered": [],
+    "family_history": [],
+    "anesthesia_reaction": "no",
+    "blood_thinners": "no",
+    "allergy": "no",
+    "companion": "yes",
+    "medications": "Препаратов не принимает",
+    "conditions_other": "",
+    "last_screening": {},
+    "provenance": {
+     "questionnaire": "744d7f79e6872a31572dda9d75269a8a8b7bcd4a",
+     "registered": "confirmed_clinician",
+     "last_screening": "explicit_patient_history"
+    },
+    "checkup_year": 2026,
+    "visit_date": "2026-09-30"
+   },
+   "from": "Scenarios.docx (ветка ml), состояние S04-A"
+  },
+  {
+   "name": "S05 · День рождения 39 затем 40 лет",
+   "input": {
+    "sex": "M",
+    "for_child": false,
+    "birth_date": "1986-10-01",
+    "urgent": "none",
+    "attached_to": "green_clinic",
+    "conditions": [],
+    "registered": [],
+    "family_history": [],
+    "anesthesia_reaction": "no",
+    "blood_thinners": "no",
+    "allergy": "no",
+    "companion": "yes",
+    "medications": "Препаратов не принимает",
+    "conditions_other": "",
+    "last_screening": {},
+    "provenance": {
+     "questionnaire": "744d7f79e6872a31572dda9d75269a8a8b7bcd4a",
+     "registered": "confirmed_clinician",
+     "last_screening": "explicit_patient_history"
+    },
+    "smoking": {
+     "pack_years": 0
+    },
+    "hazardous_work_10y": false,
+    "risk_group": [],
+    "dysuria": "no",
+    "checkup_year": 2026,
+    "visit_date": "2026-09-30"
+   },
+   "from": "Scenarios.docx (ветка ml), состояние S05-A"
+  },
+  {
+   "name": "S06 · 39 полных лет скрининговый возраст 40",
+   "input": {
+    "sex": "F",
+    "for_child": false,
+    "birth_date": "1986-12-01",
+    "urgent": "none",
+    "attached_to": "green_clinic",
+    "conditions": [],
+    "registered": [],
+    "family_history": [],
+    "anesthesia_reaction": "no",
+    "blood_thinners": "no",
+    "allergy": "no",
+    "companion": "yes",
+    "medications": "Препаратов не принимает",
+    "conditions_other": "",
+    "last_screening": {},
+    "provenance": {
+     "questionnaire": "744d7f79e6872a31572dda9d75269a8a8b7bcd4a",
+     "registered": "confirmed_clinician",
+     "last_screening": "explicit_patient_history"
+    },
+    "smoking": {
+     "pack_years": 0
+    },
+    "hazardous_work_10y": false,
+    "risk_group": [],
+    "discharge": "no",
+    "pregnant": "no",
+    "pregnancies": 0,
+    "births": 0,
+    "contraception": "condom",
+    "last_period": "2026-09-10",
+    "checkup_year": 2026,
+    "visit_date": "2026-09-30"
+   },
+   "from": "Scenarios.docx (ветка ml), состояние S06-A"
+  },
+  {
+   "name": "S07 · Три стоп ветви urgent",
+   "input": {
+    "sex": "M",
+    "for_child": false,
+    "birth_date": "1991-05-12",
+    "urgent": "chest_pain",
+    "attached_to": "green_clinic",
+    "conditions_other": "",
+    "last_screening": {},
+    "provenance": {
+     "questionnaire": "744d7f79e6872a31572dda9d75269a8a8b7bcd4a",
+     "registered": "confirmed_clinician",
+     "last_screening": "explicit_patient_history"
+    },
+    "dysuria": "no",
+    "checkup_year": 2026,
+    "visit_date": "2026-09-30"
+   },
+   "from": "Scenarios.docx (ветка ml), состояние S07-A"
+  },
+  {
+   "name": "S08 · Пропуск обязательного urgent",
+   "input": {
+    "sex": "M",
+    "for_child": false,
+    "birth_date": "1991-05-12",
+    "attached_to": "green_clinic",
+    "conditions": [],
+    "registered": [],
+    "family_history": [],
+    "anesthesia_reaction": "no",
+    "blood_thinners": "no",
+    "allergy": "no",
+    "companion": "yes",
+    "medications": "Препаратов не принимает",
+    "conditions_other": "",
+    "last_screening": {},
+    "provenance": {
+     "questionnaire": "744d7f79e6872a31572dda9d75269a8a8b7bcd4a",
+     "registered": "confirmed_clinician",
+     "last_screening": "explicit_patient_history"
+    },
+    "smoking": {
+     "pack_years": 0
+    },
+    "hazardous_work_10y": false,
+    "risk_group": [],
+    "dysuria": "no",
+    "checkup_year": 2026,
+    "visit_date": "2026-09-30"
+   },
+   "from": "Scenarios.docx (ветка ml), состояние S08-A"
+  },
+  {
+   "name": "S09 · Беременность ограничения не скрываются оплатой",
+   "input": {
+    "sex": "F",
+    "for_child": false,
+    "birth_date": "1982-05-12",
+    "urgent": "none",
+    "attached_to": "green_clinic",
+    "conditions": [],
+    "registered": [],
+    "family_history": [],
+    "anesthesia_reaction": "no",
+    "blood_thinners": "no",
+    "allergy": "no",
+    "companion": "yes",
+    "medications": "Препаратов не принимает",
+    "conditions_other": "",
+    "last_screening": {},
+    "provenance": {
+     "questionnaire": "744d7f79e6872a31572dda9d75269a8a8b7bcd4a",
+     "registered": "confirmed_clinician",
+     "last_screening": "explicit_patient_history"
+    },
+    "smoking": {
+     "pack_years": 0
+    },
+    "hazardous_work_10y": false,
+    "risk_group": [
+     "pregnancy"
+    ],
+    "discharge": "no",
+    "pregnant": "yes",
+    "pregnancies": 1,
+    "births": 0,
+    "contraception": "none",
+    "last_period": "2026-07-01",
+    "checkup_year": 2026,
+    "visit_date": "2026-09-30"
+   },
+   "from": "Scenarios.docx (ветка ml), состояние S09-A"
+  },
+  {
+   "name": "S10 · Неуверенность и пропуск ответа о беременности",
+   "input": {
+    "sex": "F",
+    "for_child": false,
+    "birth_date": "1991-05-12",
+    "urgent": "none",
+    "attached_to": "green_clinic",
+    "conditions": [],
+    "registered": [],
+    "family_history": [],
+    "anesthesia_reaction": "no",
+    "blood_thinners": "no",
+    "allergy": "no",
+    "companion": "yes",
+    "medications": "Препаратов не принимает",
+    "conditions_other": "",
+    "last_screening": {},
+    "provenance": {
+     "questionnaire": "744d7f79e6872a31572dda9d75269a8a8b7bcd4a",
+     "registered": "confirmed_clinician",
+     "last_screening": "explicit_patient_history"
+    },
+    "smoking": {
+     "pack_years": 0
+    },
+    "hazardous_work_10y": false,
+    "risk_group": {
+     "medical_worker_invasive": "no",
+     "planned_surgery": "no",
+     "hemodialysis_oncology_hematology": "no",
+     "transfusion_transplant": "no",
+     "pregnancy": "unknown",
+     "hiv_key_population": "no"
+    },
+    "discharge": "no",
+    "pregnant": "unsure",
+    "pregnancies": 0,
+    "births": 0,
+    "contraception": "condom",
+    "last_period": "2026-09-10",
+    "checkup_year": 2026,
+    "visit_date": "2026-09-30"
+   },
+   "from": "Scenarios.docx (ветка ml), состояние S10-A"
+  },
+  {
+   "name": "S11 · Широкий ответ legacy код и отдельный диагноз",
+   "input": {
+    "sex": "F",
+    "for_child": false,
+    "birth_date": "1984-05-12",
+    "urgent": "none",
+    "attached_to": "green_clinic",
+    "conditions": [
+     "breast"
+    ],
+    "registered": [],
+    "family_history": [],
+    "anesthesia_reaction": "no",
+    "blood_thinners": "no",
+    "allergy": "no",
+    "companion": "yes",
+    "medications": "Препаратов не принимает",
+    "conditions_other": "",
+    "last_screening": {},
+    "provenance": {
+     "questionnaire": "744d7f79e6872a31572dda9d75269a8a8b7bcd4a",
+     "registered": "confirmed_clinician",
+     "last_screening": "explicit_patient_history"
+    },
+    "smoking": {
+     "pack_years": 0
+    },
+    "hazardous_work_10y": false,
+    "risk_group": [],
+    "discharge": "no",
+    "pregnant": "no",
+    "pregnancies": 0,
+    "births": 0,
+    "contraception": "condom",
+    "last_period": "2026-09-10",
+    "checkup_year": 2026,
+    "visit_date": "2026-09-30"
+   },
+   "from": "Scenarios.docx (ветка ml), состояние S11-A"
+  },
+  {
+   "name": "S12 · Неизвестный срок отказа от курения",
+   "input": {
+    "sex": "M",
+    "for_child": false,
+    "birth_date": "1974-05-12",
+    "urgent": "none",
+    "attached_to": "green_clinic",
+    "conditions": [],
+    "registered": [],
+    "family_history": [],
+    "anesthesia_reaction": "no",
+    "blood_thinners": "no",
+    "allergy": "no",
+    "companion": "yes",
+    "medications": "Препаратов не принимает",
+    "conditions_other": "",
+    "last_screening": {},
+    "provenance": {
+     "questionnaire": "744d7f79e6872a31572dda9d75269a8a8b7bcd4a",
+     "registered": "confirmed_clinician",
+     "last_screening": "explicit_patient_history"
+    },
+    "smoking": {
+     "pack_years": 25
+    },
+    "hazardous_work_10y": false,
+    "risk_group": [],
+    "dysuria": "no",
+    "checkup_year": 2026,
+    "visit_date": "2026-09-30"
+   },
+   "from": "Scenarios.docx (ветка ml), состояние S12-A"
+  },
+  {
+   "name": "S13 · Граница 15 лет после отказа",
+   "input": {
+    "sex": "M",
+    "for_child": false,
+    "birth_date": "1974-05-12",
+    "urgent": "none",
+    "attached_to": "green_clinic",
+    "conditions": [],
+    "registered": [],
+    "family_history": [],
+    "anesthesia_reaction": "no",
+    "blood_thinners": "no",
+    "allergy": "no",
+    "companion": "yes",
+    "medications": "Препаратов не принимает",
+    "conditions_other": "",
+    "last_screening": {},
+    "provenance": {
+     "questionnaire": "744d7f79e6872a31572dda9d75269a8a8b7bcd4a",
+     "registered": "confirmed_clinician",
+     "last_screening": "explicit_patient_history"
+    },
+    "smoking": {
+     "pack_years": 20,
+     "quit_years_ago": 14
+    },
+    "hazardous_work_10y": false,
+    "risk_group": [],
+    "dysuria": "no",
+    "checkup_year": 2026,
+    "visit_date": "2026-09-30"
+   },
+   "from": "Scenarios.docx (ветка ml), состояние S13-A"
+  },
+  {
+   "name": "S14 · Legacy диапазон вместо выдуманного 2025",
+   "input": {
+    "sex": "F",
+    "for_child": false,
+    "birth_date": "1984-05-12",
+    "urgent": "none",
+    "attached_to": "green_clinic",
+    "conditions": [],
+    "registered": [],
+    "family_history": [],
+    "anesthesia_reaction": "no",
+    "blood_thinners": "no",
+    "allergy": "no",
+    "companion": "yes",
+    "medications": "Препаратов не принимает",
+    "conditions_other": "",
+    "last_screening": {
+     "scr_breast": 2025
+    },
+    "provenance": {
+     "questionnaire": "df733c43d5ab655ef08036366a44bae04e59182f",
+     "last_screening": "df733c4:recent_two_years_YEAR_MINUS_1"
+    },
+    "smoking": {
+     "pack_years": 0
+    },
+    "hazardous_work_10y": false,
+    "risk_group": [],
+    "discharge": "no",
+    "pregnant": "no",
+    "pregnancies": 0,
+    "births": 0,
+    "contraception": "condom",
+    "last_period": "2026-09-10",
+    "smoke_status": "never",
+    "checkup_year": 2026,
+    "visit_date": "2026-09-30"
+   },
+   "from": "Scenarios.docx (ветка ml), состояние S14-A"
+  },
+  {
+   "name": "S15 · Реальный год 2025 сохраняет точность year",
+   "input": {
+    "sex": "F",
+    "for_child": false,
+    "birth_date": "1984-05-12",
+    "urgent": "none",
+    "attached_to": "green_clinic",
+    "conditions": [],
+    "registered": [],
+    "family_history": [],
+    "anesthesia_reaction": "no",
+    "blood_thinners": "no",
+    "allergy": "no",
+    "companion": "yes",
+    "medications": "Препаратов не принимает",
+    "conditions_other": "",
+    "last_screening": {
+     "scr_breast": 2025
+    },
+    "provenance": {
+     "questionnaire": "744d7f79e6872a31572dda9d75269a8a8b7bcd4a",
+     "registered": "confirmed_clinician",
+     "last_screening": "known_year"
+    },
+    "smoking": {
+     "pack_years": 0
+    },
+    "hazardous_work_10y": false,
+    "risk_group": [],
+    "discharge": "no",
+    "pregnant": "no",
+    "pregnancies": 0,
+    "births": 0,
+    "contraception": "condom",
+    "last_period": "2026-09-10",
+    "checkup_year": 2026,
+    "visit_date": "2026-09-30"
+   },
+   "from": "Scenarios.docx (ветка ml), состояние S15-A"
+  },
+  {
+   "name": "S16 · Кандидаты учёт по АГ и место прохождения",
+   "input": {
+    "sex": "F",
+    "for_child": false,
+    "birth_date": "1984-05-12",
+    "urgent": "none",
+    "attached_to": "green_clinic",
+    "conditions": [
+     "pressure"
+    ],
+    "registered": [],
+    "family_history": [],
+    "anesthesia_reaction": "no",
+    "blood_thinners": "no",
+    "allergy": "no",
+    "companion": "yes",
+    "medications": "Препаратов не принимает",
+    "conditions_other": "",
+    "last_screening": {
+     "scr_breast": 2022,
+     "scr_cervix": 2020,
+     "scr_colorectal": 2022,
+     "scr_cvd": 2022,
+     "scr_hepatitis": 2021
+    },
+    "provenance": {
+     "questionnaire": "744d7f79e6872a31572dda9d75269a8a8b7bcd4a",
+     "registered": "confirmed_clinician",
+     "last_screening": "explicit_patient_history"
+    },
+    "smoking": {
+     "pack_years": 0
+    },
+    "hazardous_work_10y": false,
+    "risk_group": [],
+    "discharge": "no",
+    "pregnant": "no",
+    "pregnancies": 0,
+    "births": 0,
+    "contraception": "condom",
+    "last_period": "2026-09-10",
+    "checkup_year": 2026,
+    "visit_date": "2026-09-30"
+   },
+   "from": "Scenarios.docx (ветка ml), состояние S16-A"
+  },
+  {
+   "name": "S17 · Пересечения HbA1c и группы УЗДГ",
+   "input": {
+    "sex": "M",
+    "for_child": false,
+    "birth_date": "1974-05-12",
+    "urgent": "none",
+    "attached_to": "green_clinic",
+    "conditions": [],
+    "registered": [],
+    "family_history": [],
+    "anesthesia_reaction": "no",
+    "blood_thinners": "no",
+    "allergy": "no",
+    "companion": "yes",
+    "medications": "Препаратов не принимает",
+    "conditions_other": "",
+    "last_screening": {},
+    "provenance": {
+     "questionnaire": "744d7f79e6872a31572dda9d75269a8a8b7bcd4a",
+     "registered": "confirmed_clinician",
+     "last_screening": "explicit_patient_history"
+    },
+    "smoking": {
+     "pack_years": 0
+    },
+    "hazardous_work_10y": false,
+    "risk_group": [],
+    "dysuria": "no",
+    "checkup_year": 2026,
+    "visit_date": "2026-09-30"
+   },
+   "from": "Scenarios.docx (ветка ml), состояние S17-A"
+  },
+  {
+   "name": "S18 · Диабет черновое предложение эндокринолога",
+   "input": {
+    "sex": "M",
+    "for_child": false,
+    "birth_date": "1991-05-12",
+    "urgent": "none",
+    "attached_to": "green_clinic",
+    "conditions": [
+     "diabetes"
+    ],
+    "registered": [],
+    "family_history": [],
+    "anesthesia_reaction": "no",
+    "blood_thinners": "no",
+    "allergy": "no",
+    "companion": "yes",
+    "medications": "Препаратов не принимает",
+    "conditions_other": "",
+    "last_screening": {},
+    "provenance": {
+     "questionnaire": "744d7f79e6872a31572dda9d75269a8a8b7bcd4a",
+     "registered": "confirmed_clinician",
+     "last_screening": "explicit_patient_history"
+    },
+    "smoking": {
+     "pack_years": 0
+    },
+    "hazardous_work_10y": false,
+    "risk_group": [],
+    "dysuria": "no",
+    "checkup_year": 2026,
+    "visit_date": "2026-09-30"
+   },
+   "from": "Scenarios.docx (ветка ml), состояние S18-A"
+  },
+  {
+   "name": "S19 · Анестезия препарат и отсутствие сопровождающего",
+   "input": {
+    "sex": "M",
+    "for_child": false,
+    "birth_date": "1991-05-12",
+    "urgent": "none",
+    "attached_to": "green_clinic",
+    "conditions": [],
+    "registered": [],
+    "family_history": [],
+    "anesthesia_reaction": "no",
+    "blood_thinners": "yes",
+    "allergy": "no",
+    "companion": "no",
+    "medications": "Сообщил приём разжижающего кровь препарата; название, доза и режим неизвестны",
+    "conditions_other": "",
+    "last_screening": {},
+    "provenance": {
+     "questionnaire": "744d7f79e6872a31572dda9d75269a8a8b7bcd4a",
+     "registered": "confirmed_clinician",
+     "last_screening": "explicit_patient_history"
+    },
+    "smoking": {
+     "pack_years": 0
+    },
+    "hazardous_work_10y": false,
+    "risk_group": [],
+    "dysuria": "no",
+    "checkup_year": 2026,
+    "visit_date": "2026-09-30"
+   },
+   "from": "Scenarios.docx (ветка ml), состояние S19-A"
+  },
+  {
+   "name": "S20 · Детский extended вместо рекомендованного mini",
+   "input": {
+    "sex": "M",
+    "for_child": true,
+    "birth_date": "2016-05-12",
+    "urgent": "none",
+    "attached_to": "green_clinic",
+    "conditions": [],
+    "registered": [],
+    "family_history": [],
+    "anesthesia_reaction": "no",
+    "blood_thinners": "no",
+    "allergy": "no",
+    "companion": "yes",
+    "medications": "Препаратов не принимает",
+    "conditions_other": "",
+    "last_screening": {},
+    "provenance": {
+     "questionnaire": "744d7f79e6872a31572dda9d75269a8a8b7bcd4a",
+     "registered": "confirmed_clinician",
+     "last_screening": "explicit_patient_history"
+    },
+    "checkup_year": 2026,
+    "visit_date": "2026-09-30"
+   },
+   "from": "Scenarios.docx (ветка ml), состояние S20-A"
+  },
+  {
+   "name": "S21 · Удаление рекомендованной КТ в custom",
+   "input": {
+    "sex": "M",
+    "for_child": false,
+    "birth_date": "1991-05-12",
+    "urgent": "none",
+    "attached_to": "green_clinic",
+    "conditions": [],
+    "registered": [],
+    "family_history": [],
+    "anesthesia_reaction": "no",
+    "blood_thinners": "no",
+    "allergy": "no",
+    "companion": "yes",
+    "medications": "Препаратов не принимает",
+    "conditions_other": "",
+    "last_screening": {},
+    "provenance": {
+     "questionnaire": "744d7f79e6872a31572dda9d75269a8a8b7bcd4a",
+     "registered": "confirmed_clinician",
+     "last_screening": "explicit_patient_history"
+    },
+    "smoking": {
+     "pack_years": 0
+    },
+    "hazardous_work_10y": false,
+    "risk_group": [],
+    "dysuria": "no",
+    "checkup_year": 2026,
+    "visit_date": "2026-09-30"
+   },
+   "from": "Scenarios.docx (ветка ml), состояние S21-A"
+  },
+  {
+   "name": "S22 · Добавление уролога и повтор того же ID",
+   "input": {
+    "sex": "M",
+    "for_child": false,
+    "birth_date": "1991-05-12",
+    "urgent": "none",
+    "attached_to": "green_clinic",
+    "conditions": [],
+    "registered": [],
+    "family_history": [],
+    "anesthesia_reaction": "no",
+    "blood_thinners": "no",
+    "allergy": "no",
+    "companion": "yes",
+    "medications": "Препаратов не принимает",
+    "conditions_other": "",
+    "last_screening": {},
+    "provenance": {
+     "questionnaire": "744d7f79e6872a31572dda9d75269a8a8b7bcd4a",
+     "registered": "confirmed_clinician",
+     "last_screening": "explicit_patient_history"
+    },
+    "smoking": {
+     "pack_years": 0
+    },
+    "hazardous_work_10y": false,
+    "risk_group": [],
+    "dysuria": "no",
+    "checkup_year": 2026,
+    "visit_date": "2026-09-30"
+   },
+   "from": "Scenarios.docx (ветка ml), состояние S22-A"
+  },
+  {
+   "name": "S23 · Preset затем custom затем preset без переноса старого выбора",
+   "input": {
+    "sex": "M",
+    "for_child": false,
+    "birth_date": "1991-05-12",
+    "urgent": "none",
+    "attached_to": "green_clinic",
+    "conditions": [],
+    "registered": [],
+    "family_history": [],
+    "anesthesia_reaction": "no",
+    "blood_thinners": "no",
+    "allergy": "no",
+    "companion": "yes",
+    "medications": "Препаратов не принимает",
+    "conditions_other": "",
+    "last_screening": {},
+    "provenance": {
+     "questionnaire": "744d7f79e6872a31572dda9d75269a8a8b7bcd4a",
+     "registered": "confirmed_clinician",
+     "last_screening": "explicit_patient_history"
+    },
+    "smoking": {
+     "pack_years": 0
+    },
+    "hazardous_work_10y": false,
+    "risk_group": [],
+    "dysuria": "no",
+    "checkup_year": 2026,
+    "visit_date": "2026-09-30"
+   },
+   "from": "Scenarios.docx (ветка ml), состояние S23-A"
+  },
+  {
+   "name": "S24 · Пустой custom и отсутствие поля выбора",
+   "input": {
+    "sex": "M",
+    "for_child": false,
+    "birth_date": "1991-05-12",
+    "urgent": "none",
+    "attached_to": "green_clinic",
+    "conditions": [],
+    "registered": [],
+    "family_history": [],
+    "anesthesia_reaction": "no",
+    "blood_thinners": "no",
+    "allergy": "no",
+    "companion": "yes",
+    "medications": "Препаратов не принимает",
+    "conditions_other": "",
+    "last_screening": {},
+    "provenance": {
+     "questionnaire": "744d7f79e6872a31572dda9d75269a8a8b7bcd4a",
+     "registered": "confirmed_clinician",
+     "last_screening": "explicit_patient_history"
+    },
+    "smoking": {
+     "pack_years": 0
+    },
+    "hazardous_work_10y": false,
+    "risk_group": [],
+    "dysuria": "no",
+    "checkup_year": 2026,
+    "visit_date": "2026-09-30"
+   },
+   "from": "Scenarios.docx (ветка ml), состояние S24-A"
+  },
+  {
+   "name": "▶ Демо · Ж 42, на учёте по давлению, рак кишечника у отца",
+   "input": {
+    "for_child": false,
+    "sex": "F",
+    "birth_date": "1984-05-12",
+    "urgent": "none",
+    "pregnant": "no",
+    "pregnancies": 1,
+    "births": 1,
+    "discharge": "yes",
+    "conditions": [
+     "pressure",
+     "bowel"
+    ],
+    "registered": [
+     "hypertension"
+    ],
+    "smoke_status": "never",
+    "family_history": [
+     "colorectal_cancer"
+    ],
+    "companion": "no",
+    "birth_year": 1984,
+    "checkup_year": 2026,
+    "smoking": {
+     "pack_years": 0,
+     "quit_years_ago": 0
+    },
+    "provenance": {
+     "registered": "confirmed_clinician"
+    }
+   },
+   "from": "эталонная анкета формы команды (автопоказ ▶ Демо)"
+  }
+ ]
+}

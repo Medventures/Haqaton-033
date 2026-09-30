@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>MedHub · Check-up Intelligence</title>
+<style>
+@font-face{font-family:Geologica;src:url('assets/Geologica.ttf') format('truetype');font-style:normal;font-weight:100 900;font-display:block}
+:root{--ink:#184d3b;--green:#167953;--soft:#eef5f1;--amber:#ffca79;--rust:#c2410c;--paper:#fafbf7;--muted:#576f62;--line:#d5e3d9}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}body{background:#dbe3dc;color:var(--ink);font-family:Geologica,sans-serif}button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:pointer}button:focus-visible{outline:4px solid var(--green);outline-offset:7px;border-radius:12px}h1,h2,h3,p,figure{margin:0}svg{display:block}button svg{pointer-events:none}[hidden]{display:none!important}
+#viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden}#stage{position:relative;width:1440px;height:810px;flex:none;transform:scale(var(--scale,1));background:var(--paper);overflow:hidden;transform-origin:center;isolation:isolate}
+.defs{position:absolute;width:0;height:0;overflow:hidden}.frame{position:absolute;inset:0;padding:66px 64px 76px;display:none}.frame.active{display:block;animation:enter .42s ease both}.frame h1{font-size:76px;line-height:1.08;letter-spacing:-2.7px;font-weight:650}.frame h2{font-size:64px;line-height:1.12;letter-spacing:-2px;font-weight:600}.kicker{font-size:28px;font-weight:450;line-height:1.3;color:var(--muted)}.icon{width:100%;height:100%;color:var(--ink)}.rule{height:2px;background:var(--line)}.logo-green{background:var(--ink);width:174px;height:88px;display:grid;place-items:center;border-radius:14px}.logo-green img{width:132px;height:64px;object-fit:contain}.logo-qorgan{width:138px;height:38px;object-fit:contain}.brand-pair{position:absolute;right:64px;top:52px;display:flex;align-items:center;gap:28px}.partner-word{font-size:28px;margin-right:4px;color:var(--muted)}
+/* A1: a single question, a person and a wall of packages. */
+.a1 h1{max-width:990px;font-size:88px;line-height:1.05}.a1 .problem-visual{position:absolute;left:76px;right:64px;top:265px;height:414px}.a1 .free-card{position:absolute;left:1030px;top:399px;width:315px;height:218px;border:3px dashed #a8bdb0;border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:15px;background:#f1f5ef;color:#647d6e}.free-card svg{width:66px;height:66px}.free-card p{font-size:28px;text-align:center;line-height:1.25}.package-name{font-size:28px;font-weight:550;fill:var(--ink)}
+/* A2 */
+.a2{padding-top:94px}.a2 h1{font-size:76px}.alternatives{display:grid;grid-template-columns:1fr 1fr;gap:54px;margin-top:75px}.alternative{position:relative;min-height:432px;background:var(--soft);border-radius:30px;padding:38px 38px 32px;overflow:hidden}.alternative .pictogram{width:155px;height:155px;margin-bottom:31px;position:relative}.alternative h2{font-size:44px;line-height:1.18;letter-spacing:-1.2px;font-weight:550;max-width:490px}.alternative p{font-size:28px;color:var(--muted);margin-top:20px;line-height:1.3}.slash{position:absolute;left:16px;top:10px;width:129px;height:129px;border-top:5px solid var(--rust);transform:translateY(64px) rotate(-43deg);opacity:.85}
+/* A3 */
+.a3{padding-top:72px}.a3 .kicker{margin-top:4px}.team{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:94px}.member{text-align:center}.avatar{width:138px;height:138px;border-radius:50%;background:var(--soft);border:2px solid #bed5c6;margin:0 auto 18px;display:grid;place-items:center;font-size:48px;font-weight:550;letter-spacing:-1px}.member:nth-child(1) .avatar{background:var(--amber);border-color:var(--amber)}.member:nth-child(4) .avatar{background:var(--green);border-color:var(--green);color:white}.member .role{font-size:30px;font-weight:550;line-height:1.2}.member .name{font-size:28px;color:var(--muted);margin-top:8px}.a3 .principle{font-size:68px;line-height:1.1;letter-spacing:-2.4px;font-weight:650;margin-top:62px;max-width:1270px}.a3 .principle span{color:var(--green)}.a3 .disclaimer{font-size:28px;color:var(--muted);margin-top:25px}
+/* B1 */
+.b1 h1{font-size:70px}.flow{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;position:absolute;left:54px;right:54px;top:312px}.flow:before{content:'';position:absolute;top:80px;left:95px;right:95px;height:4px;background:#b6d7c4;z-index:-1}.flow-node{position:relative;text-align:center;border-radius:22px;padding-bottom:14px}.flow-node:after{content:'';position:absolute;right:-11px;top:74px;width:14px;height:14px;border-top:3px solid var(--green);border-right:3px solid var(--green);transform:rotate(45deg)}.flow-node:last-child:after{display:none}.flow-circle{width:160px;height:160px;border-radius:50%;background:var(--soft);border:2px solid #b6d7c4;margin:0 auto;display:grid;place-items:center;transition:background .3s,transform .3s,box-shadow .3s}.flow-circle svg{width:94px;height:94px}.flow-label{display:block;font-size:28px;line-height:1.22;font-weight:500;margin-top:28px;min-height:70px}.flow-node:hover .flow-circle{background:var(--amber);transform:translateY(-7px);box-shadow:0 12px 0 #e6eee5}.b1.active .flow-circle{animation:light .3s both;animation-delay:calc(var(--i)*.3s)}.flow-node:nth-child(6) .flow-circle{background:var(--amber);border-color:var(--amber)}.b1 .flow-ground{position:absolute;left:140px;right:140px;top:654px;height:4px;background:var(--soft)}.b1 .flow-ground:before{content:'';display:block;width:100%;height:4px;background:var(--green);transform-origin:left;animation:linegrow .6s .15s both}
+/* B2 */
+.b2 h1{font-size:76px}.fork-source{position:absolute;left:644px;top:175px;width:152px;height:130px;background:var(--soft);border-radius:22px;padding:25px}.fork-lines{position:absolute;left:260px;top:310px;width:920px;height:114px}.choices{position:absolute;top:425px;left:96px;right:96px;display:grid;grid-template-columns:1fr 1fr;gap:110px}.choice{text-align:center}.choice-name{font-size:34px;font-weight:500}.choice .free{font-size:46px;margin-top:10px;line-height:1.1;font-weight:550}.choice .days{display:flex;align-items:baseline;justify-content:center;gap:18px;margin-top:0}.choice .days span{font-size:32px}.choice .days strong{font-size:136px;line-height:1.05;letter-spacing:-6px;font-weight:650}.choice.prime .today{font-size:76px;line-height:1.14;margin-top:46px;font-weight:600;letter-spacing:-3px;display:inline-block;background:linear-gradient(transparent 68%,var(--amber) 68%);padding:0 8px}.b2 .source{position:absolute;left:64px;right:64px;bottom:78px;text-align:center;font-size:28px;color:var(--muted)}
+/* B3 */
+.b3 h1{font-size:70px;line-height:1.12}.b3 h1 span{color:var(--green)}.doctor-art{position:absolute;left:140px;top:275px;width:410px;height:405px}.checks{position:absolute;left:675px;right:74px;top:332px;display:grid;gap:34px}.check-row{display:flex;align-items:center;gap:24px;font-size:38px;font-weight:500;line-height:1.2}.check-mark{width:68px;height:68px;border-radius:50%;background:var(--soft);flex-shrink:0;display:grid;place-items:center}.check-mark svg{width:36px;height:36px}.check-row:last-child .check-mark{background:var(--green);color:white}.check-row:last-child{color:var(--green)}.b3.active .check-row{animation:enter .4s both;animation-delay:calc(var(--i)*.4s + .15s)}
+/* B4 */
+.b4 h1{font-size:72px}.gantt{position:absolute;left:70px;right:70px;top:238px;bottom:126px;opacity:.18;display:grid;grid-template-rows:repeat(8,1fr);gap:13px;pointer-events:none}.gantt-row{position:relative;border-bottom:1px solid #a8c4b4;background:repeating-linear-gradient(90deg,transparent 0,transparent 119px,#b4cdbc 120px,#b4cdbc 121px)}.gantt-row i{display:block;position:absolute;top:0;height:17px;border-radius:5px;background:var(--green);transform-origin:left}.gantt-row i:nth-child(2){background:var(--amber)}.gantt-row i:nth-child(3){background:var(--ink)}.b4.active .gantt-row i{animation:linegrow .6s both;animation-delay:calc(var(--i)*.04s)}.metrics-main{position:absolute;top:300px;left:78px;right:78px;display:grid;grid-template-columns: 770px 1fr;gap:26px;z-index:1;background:rgba(250,251,247,.94)}.metric-big{padding:15px 0 22px}.number-line{display:flex;align-items:baseline;gap:19px;white-space:nowrap;height:166px}.number{font-size:144px;font-weight:650;letter-spacing:-8px;line-height:1.08}.old-number{color:#7a8c80;font-weight:400;position:relative}.old-number:after{content:'';position:absolute;left:0;right:-6px;top:53%;height:4px;background:var(--rust);transform:rotate(-9deg)}.number-arrow{font-size:70px;font-weight:300}.unit{font-size:36px;letter-spacing:-1px}.rolling-window{display:inline-block;width:170px;height:162px;vertical-align:bottom;overflow:hidden}.rolling-strip{display:block;transform:translateY(-50%)}.rolling-strip .number{display:block;height:162px}.b4.active .rolling-strip{animation:roll .6s cubic-bezier(.2,.7,.2,1) both}.count-eight{display:inline-block}.b4.active .count-eight{animation:count-in .6s .08s both}.metric-label{font-size:32px;line-height:1.25;font-weight:450;margin-top:20px}.metric-fine{font-size:28px;line-height:1.3;color:var(--muted);margin-top:15px}.model-note{position:absolute;bottom:81px;left:78px;font-size:28px;line-height:1.3;color:var(--muted)}
+/* B5 */
+.b5{padding-top:85px}.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:52px}.pillar{padding-right:8px}.pillar-icon{width:102px;height:102px;margin-bottom:37px}.pillar h2{font-size:64px;line-height:1.07;letter-spacing:-2.7px;font-weight:600;min-height:139px}.pillar p{font-size:28px;line-height:1.32;margin-top:21px;max-width:390px}.pillar .small-lead{font-size:32px;font-weight:500;margin-top:15px}.pillar:last-child{position:relative}.pillar:last-child:before{content:'';position:absolute;inset:-25px -25px -30px;background:var(--soft);border-radius:28px;z-index:-1}.pilot-metrics{position:absolute;left:64px;right:64px;bottom:128px;display:flex;align-items:center;justify-content:space-between;border-top:2px solid var(--line);padding-top:29px;gap:25px}.pilot-metric{display:flex;align-items:center;gap:15px;font-size:28px}.pilot-metric svg{width:40px;height:40px}.b5 .logos{position:absolute;bottom:53px;left:64px}.b5 .logo-qorgan{height:31px;width:115px}
+/* C */
+.c{padding-top:48px}.c h1{font-size:64px}.demo-grid{position:absolute;left:64px;right:64px;top:145px;display:grid;grid-template-columns:repeat(3,1fr);gap:25px 30px}.demo-card{text-align:left;border-radius:14px}.demo-card .screen-frame{display:block;height:230px;border-radius:12px;border:1px solid #bfd1c4;overflow:hidden;background:white;box-shadow:0 7px 18px #184d3b08}.demo-card img{width:100%;height:100%;object-fit:contain;display:block;transition:transform .35s}.demo-card:hover img{transform:scale(1.025)}.demo-label{font-size:28px;line-height:1.2;display:block;margin-top:13px;font-weight:500}
+/* Only unobtrusive dots are visible during the talk. */
+#progress{position:absolute;z-index:10;bottom:24px;left:50%;transform:translateX(-50%);display:flex;gap:2px;align-items:center}#progress button{width:30px;height:30px;display:grid;place-items:center}#progress button:before{content:'';display:block;width:8px;height:8px;border-radius:50%;background:#b9cbbb;transition:width .3s,background .3s}#progress button[aria-current=true]:before{background:var(--green);width:24px;border-radius:8px}#progress button.group-end{margin-right:16px}
+#lightbox{position:absolute;inset:0;z-index:30;background:#eef5f1f7;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 40px 30px;gap:16px;cursor:zoom-out;animation:enter .3s ease both}#lightbox img{max-width:100%;height:688px;max-height:calc(100% - 50px);width:auto;object-fit:contain;box-shadow:0 14px 60px #184d3b25;border-radius:10px;background:white}#lightbox-caption{font-size:28px;line-height:1.2;text-align:center}#lightbox-close{position:absolute;right:23px;top:18px;width:52px;height:52px;background:var(--paper);border:1px solid var(--line);border-radius:50%;font-size:38px;line-height:1}
+#notes{position:absolute;left:0;right:0;bottom:0;z-index:40;background:#fffef8f7;border-top:4px solid var(--amber);box-shadow:0 -14px 60px #184d3b20;padding:24px 32px 23px;display:grid;grid-template-columns:1fr 214px;gap:16px 28px;min-height:304px;max-height:620px;backdrop-filter:blur(12px)}#speech{font-size:30px;line-height:1.38;font-weight:400;white-space:normal}#next-frame{font-size:28px;line-height:1.3;color:var(--muted);padding-top:15px;border-top:1px solid var(--line);grid-column:1}#timer{grid-column:2;grid-row:1/3;align-self:start;text-align:center;font-size:72px;line-height:1.15;letter-spacing:-4px;font-weight:500;font-variant-numeric:tabular-nums;color:var(--ink);padding-top:7px}#timer.urgent{color:var(--rust)}#notes-close{position:absolute;right:17px;bottom:14px;width:42px;height:42px;font-size:34px}
+.check-row:last-child .icon{color:white}
+@keyframes enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}@keyframes light{from{background:var(--paper);opacity:.3;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}@keyframes linegrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}@keyframes roll{from{transform:translateY(0)}to{transform:translateY(-50%)}}@keyframes count-in{from{opacity:0;transform:translateY(54px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+body.export *,body.export *:before,body.export *:after{animation:none!important;transition:none!important}body.export #progress{display:none}body.export #stage{transform:none!important}body.export #viewport{position:static;display:block}body.export{width:1440px;height:810px;background:var(--paper)}
+@page{size:1440px 810px;margin:0}@media print{html,body{width:1440px;height:auto;overflow:visible;background:var(--paper)}#viewport{position:static;display:block;overflow:visible}#stage{transform:none!important;width:1440px;height:auto;overflow:visible}.frame{display:none!important;position:relative;width:1440px;height:810px;break-after:page;page-break-after:always;animation:none!important}.frame.print-final{display:block!important}.frame.print-final:last-of-type{break-after:auto;page-break-after:auto}#progress,#notes,#lightbox{display:none!important}*{-webkit-print-color-adjust:exact;print-color-adjust:exact;animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="viewport"><main id="stage" aria-label="Питч MedHub">
+<svg class="defs" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
+<symbol id="i-check" viewBox="0 0 64 64"><path d="m13 33 13 13 26-29" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-form" viewBox="0 0 100 100"><rect x="23" y="17" width="59" height="72" rx="9" fill="#fff" stroke="currentColor" stroke-width="3"/><rect x="37" y="10" width="29" height="16" rx="5" fill="#ffca79" stroke="currentColor" stroke-width="3"/><path d="m33 43 4 4 7-9m-11 24 4 4 7-9m-11 24 4 4 7-9M52 44h18M52 63h18M52 82h12" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-program" viewBox="0 0 100 100"><rect x="15" y="29" width="70" height="57" rx="11" fill="#fff" stroke="currentColor" stroke-width="3"/><path d="M35 29V18a5 5 0 0 1 5-5h20a5 5 0 0 1 5 5v11" fill="none" stroke="currentColor" stroke-width="3"/><path d="M15 48h70" stroke="currentColor" stroke-width="3"/><path d="M43 40h14v12h12v14H57v12H43V66H31V52h12z" fill="#167953" stroke="currentColor" stroke-width="2.5"/></symbol>
+<symbol id="i-consent" viewBox="0 0 100 100"><path d="M23 12h40l14 14v61H23z" fill="#fff" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="M62 12v16h15M35 41h28M35 52h21" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="m40 74 5-15L75 30l11 11-29 29z" fill="#ffca79" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="m45 59 12 11M32 80h30" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></symbol>
+<symbol id="i-route" viewBox="0 0 100 100"><path d="M27 73h43c21 0 21-30 0-30H43c-19 0-19-25 0-25h19" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><circle cx="23" cy="74" r="11" fill="#ffca79" stroke="currentColor" stroke-width="3"/><path d="M79 18c0 13-15 25-15 25S49 31 49 18a15 15 0 1 1 30 0z" fill="#167953" stroke="currentColor" stroke-width="3"/><circle cx="64" cy="18" r="5" fill="#fff"/></symbol>
+<symbol id="i-health" viewBox="0 0 100 100"><rect x="12" y="23" width="77" height="59" rx="11" fill="#fff" stroke="currentColor" stroke-width="3"/><path d="M27 23v-9h22v9" fill="#ffca79" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="M19 56h17l8-17 12 32 9-20h16" fill="none" stroke="#167953" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-bell" viewBox="0 0 100 100"><path d="M23 72h54l-8-14V40a19 19 0 0 0-38 0v18z" fill="#fff" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="M41 80c0 13 18 13 18 0M50 12v9M16 39c0-10 4-18 11-23M84 39c0-10-4-18-11-23" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></symbol>
+<symbol id="i-phone" viewBox="0 0 100 100"><path d="M22 15c-8 3-9 17-5 29 7 21 26 38 44 43 12 3 21-1 24-10l-3-13-18-5-9 9C42 62 32 51 28 38l10-8-5-17z" fill="#fff" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="M54 18c15 1 26 13 27 27M54 32c7 1 12 6 13 13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></symbol>
+<symbol id="i-price" viewBox="0 0 100 100"><rect x="10" y="15" width="80" height="66" rx="9" fill="#fff" stroke="currentColor" stroke-width="3"/><path d="M10 31h80M39 31v50" stroke="currentColor" stroke-width="3"/><circle cx="20" cy="23" r="2" fill="#167953"/><circle cx="28" cy="23" r="2" fill="#ffca79"/><path d="M20 45h9M20 58h9M20 71h9M50 45h28M50 58h28M50 71h18" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></symbol>
+<symbol id="i-clinic" viewBox="0 0 100 100"><path d="M18 89V29h64v60M9 89h82" fill="#fff" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M39 89V67h22v22M30 45h10M60 45h10M30 56h10M60 56h10" fill="none" stroke="currentColor" stroke-width="3"/><path d="M43 9h14v9h9v13H57v9H43v-9h-9V18h9z" fill="#167953"/></symbol>
+<symbol id="i-puzzle" viewBox="0 0 100 100"><path d="M17 23h25c-8-19 25-19 18 0h22v25c-19-8-19 24 0 17v21H58c7-18-25-18-18 0H17V63c18 7 18-25 0-18z" fill="#eef5f1" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="m40 49 9 9 17-19" fill="none" stroke="#167953" stroke-width="4" stroke-linecap="round"/></symbol>
+<symbol id="i-case" viewBox="0 0 100 100"><path d="M32 29V18h36v11" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><rect x="12" y="29" width="76" height="55" rx="8" fill="#eef5f1" stroke="currentColor" stroke-width="3"/><path d="M12 48q38 22 76 0" fill="none" stroke="currentColor" stroke-width="3"/><rect x="43" y="51" width="14" height="17" rx="3" fill="#ffca79" stroke="currentColor" stroke-width="3"/></symbol>
+<symbol id="i-handshake" viewBox="0 0 100 100"><path d="m7 43 14-18 21 8 14-5 29 14-5 25-25 17-30-18z" fill="#fff" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="m30 35 16 7-11 12c-4 8 4 12 10 8l14-12 21 17M36 71l10 10m0-17 13 12m-1-20 14 13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="m6 37 15-20 12 9-17 23zM75 28l12-6 10 23-12 6z" fill="#ffca79" stroke="currentColor" stroke-width="3"/></symbol>
+<symbol id="i-time" viewBox="0 0 100 100"><circle cx="50" cy="50" r="35" fill="#eef5f1" stroke="currentColor" stroke-width="5"/><path d="M50 26v25l18 11" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></symbol>
+<symbol id="i-repeat" viewBox="0 0 100 100"><path d="M20 39a32 32 0 0 1 57-13l5 8M80 62a32 32 0 0 1-57 13l-5-8M82 15v20H62M18 86V66h20" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-smile" viewBox="0 0 100 100"><circle cx="50" cy="50" r="36" fill="#ffca79" stroke="currentColor" stroke-width="4"/><circle cx="37" cy="41" r="3" fill="currentColor"/><circle cx="63" cy="41" r="3" fill="currentColor"/><path d="M32 58q18 24 36 0" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></symbol>
+</defs></svg>
+
+<section id="A1" class="frame a1 active" data-section="A" aria-label="A1 — Проблема">
+<h1>Какой чекап<br>нужен мне?</h1>
+<svg class="problem-visual" viewBox="0 0 1300 414" aria-hidden="true">
+<ellipse cx="189" cy="387" rx="138" ry="17" fill="#eef5f1"/>
+<circle cx="175" cy="128" r="48" fill="#ffca79" stroke="#184d3b" stroke-width="4"/>
+<path d="M129 117c-4-58 87-79 96-11-28-1-40-19-49-28-6 22-18 33-47 39" fill="#184d3b"/>
+<path d="M113 354v-95c0-43 24-70 62-70s65 27 65 70v95" fill="#167953" stroke="#184d3b" stroke-width="4"/>
+<path d="m139 355-8 35m78-35 10 35M144 233l45 55 58-52" fill="none" stroke="#184d3b" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="m144 229 45 55 58-52" fill="none" stroke="#eef5f1" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="260" cy="77" r="42" fill="#eef5f1"/><path d="M246 67c0-22 32-22 32-2 0 11-17 11-17 24" fill="none" stroke="#184d3b" stroke-width="5" stroke-linecap="round"/><circle cx="261" cy="102" r="3.5" fill="#184d3b"/>
+<g stroke="#184d3b" stroke-width="2.5" fill="#eef5f1">
+<rect x="395" y="29" width="165" height="147" rx="18"/><rect x="583" y="29" width="165" height="147" rx="18"/><rect x="771" y="29" width="165" height="147" rx="18"/>
+<rect x="395" y="201" width="165" height="147" rx="18"/><rect x="583" y="201" width="165" height="147" rx="18"/><rect x="771" y="201" width="165" height="147" rx="18"/>
+</g>
+<g class="package-name"><text x="419" y="82">PRIME</text><text x="607" y="82">PRIME</text><text x="795" y="82">PRIME</text><text x="419" y="254">PRIME</text><text x="607" y="254">PRIME</text><text x="795" y="254">PRIME</text></g>
+<g stroke="#b7cdbd" stroke-width="8" stroke-linecap="round"><path d="M421 113h110m-110 21h72M609 113h110m-110 21h90M797 113h110m-110 21h60M421 285h110m-110 21h90M609 285h110m-110 21h60M797 285h110m-110 21h77"/></g>
+<path d="M981 39v329" stroke="#c5d6ca" stroke-width="2" stroke-dasharray="8 10"/>
+</svg>
+<div class="free-card"><svg class="icon" aria-hidden="true"><use href="#i-clinic"/></svg><p>бесплатно<br>по госпрограмме</p></div>
+</section>
+
+<section id="A2" class="frame a2" data-section="A" aria-label="A2 — Как сейчас" hidden>
+<h1>Как сейчас</h1>
+<div class="alternatives">
+<div class="alternative"><div class="pictogram"><svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg><i class="slash"></i></div><h2>Администратор<br>по телефону</h2><p>долго, зависит от сотрудника</p></div>
+<div class="alternative"><div class="pictogram"><svg class="icon" aria-hidden="true"><use href="#i-price"/></svg><i class="slash"></i></div><h2>Прайс на сайте</h2><p>сам, вслепую</p></div>
+</div>
+</section>
+
+<section id="A3" class="frame a3 print-final" data-section="A" aria-label="A3 — Команда + главное" hidden>
+<p class="kicker">Команда</p>
+<div class="brand-pair"><span class="partner-word">партнёр</span><div class="logo-green"><img src="assets/greenclinic_logo.svg" alt="Green Clinic"></div><img class="logo-qorgan" src="assets/qorgan_logo.svg" alt="Qorgan"></div>
+<div class="team">
+<div class="member"><div class="avatar">АК</div><p class="role">медэксперт</p><p class="name">Анар</p></div>
+<div class="member"><div class="avatar">НТ</div><p class="role">разработчик</p><p class="name">Наталья</p></div>
+<div class="member"><div class="avatar">ДГ</div><p class="role">данные</p><p class="name">Даниил</p></div>
+<div class="member"><div class="avatar">ВБ</div><p class="role">продукт</p><p class="name">Виталий</p></div>
+</div>
+<h1 class="principle">У каждого пункта —<br><span>причина и источник</span></h1>
+<p class="disclaimer">Диагноз не ставим. Правила утверждает врач</p>
+</section>
+
+<section id="B1" class="frame b1" data-section="B" aria-label="B1 — Цепочка" hidden>
+<h1>Продукт и реализация</h1>
+<div class="flow">
+<button class="flow-node" style="--i:0" data-shot="01_anketa.png" data-caption="Анкета" aria-label="Анкета: открыть скриншот"><span class="flow-circle"><svg class="icon" aria-hidden="true"><use href="#i-form"/></svg></span><span class="flow-label">Анкета</span></button>
+<button class="flow-node" style="--i:1" data-shot="02_programma.png" data-caption="Программа" aria-label="Программа: открыть скриншот"><span class="flow-circle"><svg class="icon" aria-hidden="true"><use href="#i-program"/></svg></span><span class="flow-label">Программа</span></button>
+<button class="flow-node" style="--i:2" data-shot="07_soglasie.png" data-caption="Согласие: что, зачем, риски, альтернатива" aria-label="Согласие: открыть экран"><span class="flow-circle"><svg class="icon" aria-hidden="true"><use href="#i-consent"/></svg></span><span class="flow-label">Согласие</span></button>
+<button class="flow-node" style="--i:3" data-shot="06_podgotovka.png" data-caption="Маршрут · Подготовка" aria-label="Маршрут: открыть скриншот подготовки"><span class="flow-circle"><svg class="icon" aria-hidden="true"><use href="#i-route"/></svg></span><span class="flow-label">Маршрут</span></button>
+<button class="flow-node" style="--i:4" data-shot="05_karta.png" data-caption="Карта здоровья" aria-label="Карта здоровья: открыть скриншот"><span class="flow-circle"><svg class="icon" aria-hidden="true"><use href="#i-health"/></svg></span><span class="flow-label">Карта<br>здоровья</span></button>
+<button class="flow-node" style="--i:5" data-shot="05_karta.png" data-caption="Карта здоровья · Напоминание" aria-label="Напоминание: открыть карту здоровья с календарём"><span class="flow-circle"><svg class="icon" aria-hidden="true"><use href="#i-bell"/></svg></span><span class="flow-label">Напоминание</span></button>
+</div><div class="flow-ground" aria-hidden="true"></div>
+</section>
+
+<section id="B2" class="frame b2" data-section="B" aria-label="B2 — Бесплатно или сегодня" hidden>
+<h1>Бесплатно или сегодня</h1>
+<div class="fork-source"><svg class="icon" aria-hidden="true"><use href="#i-program"/></svg></div>
+<svg class="fork-lines" viewBox="0 0 920 114" aria-hidden="true"><path d="M460 0v41H94v58m366-58h366v58" fill="none" stroke="#184d3b" stroke-width="4" stroke-linejoin="round"/><path d="m80 86 14 15 14-15m704 0 14 15 14-15" fill="none" stroke="#184d3b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="460" cy="41" r="8" fill="#ffca79" stroke="#184d3b" stroke-width="3"/></svg>
+<div class="choices"><div class="choice"><p class="choice-name">Поликлиника</p><p class="free">бесплатно</p><p class="days"><span>до</span><strong>60</strong><span>дней</span></p></div><div class="choice prime"><p class="choice-name">PRIME</p><p class="today">сегодня</p></div></div>
+<p class="source">приказ ДСМ-174 (ред. № 75)</p>
+</section>
+
+<section id="B3" class="frame b3" data-section="B" aria-label="B3 — Врач-куратор" hidden>
+<h1>Правила — один раз.<br><span>Скрипт — каждому</span></h1>
+<svg class="doctor-art" viewBox="0 0 410 405" aria-hidden="true"><ellipse cx="204" cy="378" rx="190" ry="20" fill="#eef5f1"/><circle cx="197" cy="100" r="64" fill="#ffca79" stroke="#184d3b" stroke-width="4"/><path d="M133 87c-3-80 127-96 130 3-39 7-69-12-83-39-7 24-24 33-47 36" fill="#184d3b"/><path d="M67 377v-99c0-74 56-105 128-105s132 36 132 106v98" fill="#fff" stroke="#184d3b" stroke-width="4"/><path d="m157 181 38 69 41-69M195 250v128" fill="none" stroke="#184d3b" stroke-width="4" stroke-linejoin="round"/><path d="M122 202v62c0 41 62 41 62 0v-21" fill="none" stroke="#167953" stroke-width="6"/><circle cx="184" cy="245" r="10" fill="#ffca79" stroke="#184d3b" stroke-width="3"/><rect x="234" y="243" width="118" height="129" rx="12" fill="#167953" stroke="#184d3b" stroke-width="4" transform="rotate(8 293 306)"/><path d="m262 288 14 15 29-31" fill="none" stroke="#eef5f1" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><path d="m117 309 68 24 65-12" fill="none" stroke="#184d3b" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/><path d="m117 309 68 24 65-12" fill="none" stroke="#ffca79" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<div class="checks"><div class="check-row" style="--i:0"><span class="check-mark"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span>состав</div><div class="check-row" style="--i:1"><span class="check-mark"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span>согласие подписано</div><div class="check-row" style="--i:2"><span class="check-mark"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span>утверждено</div></div>
+</section>
+
+<section id="B4" class="frame b4" data-section="B" aria-label="B4 — Утро клиники" hidden>
+<h1>Утро клиники</h1><div class="gantt" aria-hidden="true"></div>
+<div class="metrics-main"><div class="metric-big"><div class="number-line"><span class="number old-number">133</span><span class="number-arrow">→</span><span class="rolling-window" aria-label="14"><span class="rolling-strip" aria-hidden="true"><span class="number">133</span><span class="number">14</span></span></span><span class="unit">мин</span></div><p class="metric-label">ожидание в коридоре</p></div><div class="metric-big"><div class="number-line"><span class="number count-eight">10</span><span class="unit">в день</span></div><p class="metric-label">полных чекапов до 18:00</p><p class="metric-fine">8 — при 2 местах УЗИ</p></div></div>
+<p class="model-note">модель на демо-данных · кабинеты по списку медэксперта</p>
+</section>
+
+<section id="B5" class="frame b5 print-final" data-section="B" aria-label="B5 — Стек · модель · запрос" hidden>
+<div class="pillars"><div class="pillar"><svg class="pillar-icon" aria-hidden="true"><use href="#i-puzzle"/></svg><h2>Open<br>source</h2><p class="small-lead">без ИИ-API</p><p>правила — таблица<br>с источником</p></div><div class="pillar"><svg class="pillar-icon" aria-hidden="true"><use href="#i-case"/></svg><h2>Лицензия<br>на клинику</h2><p>цена — по итогам пилота</p></div><div class="pillar"><svg class="pillar-icon" aria-hidden="true"><use href="#i-handshake"/></svg><h2>Пилот</h2><p class="small-lead">поток «зелёного<br>коридора»</p><p>прайс PRIME<br>врач для правил</p></div></div>
+<div class="pilot-metrics"><span class="pilot-metric"><svg class="icon" aria-hidden="true"><use href="#i-case"/></svg>продажи</span><span class="pilot-metric"><svg class="icon" aria-hidden="true"><use href="#i-time"/></svg>время</span><span class="pilot-metric"><svg class="icon" aria-hidden="true"><use href="#i-repeat"/></svg>повторы</span><span class="pilot-metric"><svg class="icon" aria-hidden="true"><use href="#i-smile"/></svg>удовлетворённость</span></div><div class="logos"><img class="logo-qorgan" src="assets/qorgan_logo.svg" alt="Qorgan"></div>
+</section>
+
+<section id="C" class="frame c print-final" data-section="C" aria-label="C — Демо" hidden>
+<h1>Демо</h1><div class="demo-grid">
+<button class="demo-card" data-shot="01_anketa.png" data-caption="Анкета"><span class="screen-frame"><img src="screens/01_anketa.png" alt="Анкета"></span><span class="demo-label">Анкета</span></button>
+<button class="demo-card" data-shot="02_programma.png" data-caption="Программа"><span class="screen-frame"><img src="screens/02_programma.png" alt="Программа"></span><span class="demo-label">Программа</span></button>
+<button class="demo-card" data-shot="06_podgotovka.png" data-caption="Подготовка"><span class="screen-frame"><img src="screens/06_podgotovka.png" alt="Подготовка"></span><span class="demo-label">Подготовка</span></button>
+<button class="demo-card" data-shot="03_kurator.png" data-caption="Куратор"><span class="screen-frame"><img src="screens/03_kurator.png" alt="Куратор"></span><span class="demo-label">Куратор</span></button>
+<button class="demo-card" data-shot="04_karusel.png" data-caption="Утро клиники"><span class="screen-frame"><img src="screens/04_karusel.png" alt="Утро клиники"></span><span class="demo-label">Утро клиники</span></button>
+<button class="demo-card" data-shot="05_karta.png" data-caption="Карта здоровья"><span class="screen-frame"><img src="screens/05_karta.png" alt="Карта здоровья"></span><span class="demo-label">Карта здоровья</span></button>
+</div></section>
+
+<nav id="progress" aria-label="Кадры презентации"></nav>
+<div id="lightbox" role="dialog" aria-modal="true" aria-labelledby="lightbox-caption" tabindex="-1" hidden><button id="lightbox-close" aria-label="Закрыть скриншот">×</button><img id="lightbox-image" alt=""><p id="lightbox-caption"></p></div>
+<aside id="notes" aria-label="Заметки докладчика" hidden><p id="speech"></p><p id="next-frame"></p><output id="timer" aria-label="Осталось времени">2:00</output><button id="notes-close" aria-label="Закрыть заметки">×</button></aside>
+</main></div>
+<script id="speaker-data" type="application/json">{
+  "A1": {
+    "title": "A1 — Проблема",
+    "speech": "«Человек приходит за чекапом и не знает, какой пакет ему нужен. Не знает, что часть обследований ему положена\nбесплатно. А после чекапа результаты лежат по разным бумагам, и повтор забывается.»"
+  },
+  "A2": {
+    "title": "A2 — Как сейчас",
+    "speech": "«Сегодня выбор — либо звонок администратору, либо прайс на сайте. Ответ зависит от человека, а бесплатное\nникто не показывает.»"
+  },
+  "A3": {
+    "title": "A3 — Команда + главное",
+    "speech": "«Мы команда Qorgan: врач Анар Кыстаубаева, разработка Натальи, данные Даниила, и я — продукт. Наш принцип:\nу каждого пункта программы есть причина и источник. Диагноз мы не ставим.»"
+  },
+  "B1": {
+    "title": "B1 — Цепочка",
+    "speech": "«Мы сделали зелёный коридор чекапа — вот вся цепочка. Анкета простыми словами. Программа — пакет PRIME плюс\nто, что положено бесплатно. Согласие простыми словами. Маршрут дня с подготовкой к каждой процедуре. Карта здоровья\nи напоминание о повторе.»"
+  },
+  "B2": {
+    "title": "B2 — «Бесплатно или сегодня»",
+    "speech": "«Главное — честность. Если обследование положено бесплатно, мы так и пишем: в поликлинике в течение 60 дней\nили сегодня в PRIME. Выбор за пациентом. И у каждого пункта видно, откуда правило.»"
+  },
+  "B3": {
+    "title": "B3 — Врач-куратор",
+    "speech": "«Врач-куратор видит анкету, убирает или добавляет пункт, без подписанного согласия утвердить нельзя.\nВажно: врач утверждает правила один раз, а скрипт применяет их к каждому пациенту. Никакой модели, которая что-то\nпридумывает.»"
+  },
+  "B4": {
+    "title": "B4 — Утро клиники",
+    "speech": "«Утро клиники. Если все приходят к восьми, узкое место — УЗИ, и люди ждут часами. Скрипт даёт каждому своё\nвремя прихода — ожидание падает с двух часов до четверти часа — и честно считает: десять полных чекапов в день, остальных — на следующие дни.»"
+  },
+  "B5": {
+    "title": "B5 — Стек · модель · запрос",
+    "speech": "«Всё на open source, как просила Green Clinic. Модель — лицензия на клинику, цена — по итогам пилота. Меряем\nметрики трека: продажи чекапов, время прохождения, повторные визиты и удовлетворённость. Просим пилот на одном потоке,\nпрайс пакетов и врача клиники, чтобы утвердить правила. Спасибо.»"
+  },
+  "C": {
+    "title": "C — Демо",
+    "speech": "по сценарию DEMO_SCRIPT.md."
+  }
+}</script>
+<script>
+'use strict';
+const frames = [...document.querySelectorAll('.frame')];
+const ids = frames.map(frame => frame.id);
+const speechData = JSON.parse(document.getElementById('speaker-data').textContent);
+const stage = document.getElementById('stage');
+const progress = document.getElementById('progress');
+const notes = document.getElementById('notes');
+const lightbox = document.getElementById('lightbox');
+const timer = document.getElementById('timer');
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+let current = 0, startedAt = null, lastFocus = null;
+const exportMode = new URLSearchParams(location.search).has('export');
+if (exportMode) document.body.classList.add('export');
+function resize(){const scale=Math.min(innerWidth/1440,innerHeight/810);stage.style.setProperty('--scale',String(scale));}
+addEventListener('resize',resize);resize();
+function startTimer(){if(startedAt===null&&!exportMode)startedAt=performance.now();updateTimer();}
+function updateTimer(){const left=startedAt===null?120:Math.max(0,120-Math.floor((performance.now()-startedAt)/1000));timer.textContent=Math.floor(left/60)+':'+String(left%60).padStart(2,'0');timer.classList.toggle('urgent',left<=20);}
+setInterval(updateTimer,200);
+function updateNotes(){document.getElementById('speech').textContent=speechData[ids[current]].speech;const next=ids[current+1];document.getElementById('next-frame').textContent=next?'→ '+speechData[next].title:'';}
+function showFrame(index,{start=true,hash=true}={}){index=typeof index==='string'?ids.indexOf(index):index;index=Math.max(0,Math.min(ids.length-1,index));if(lightbox.hidden===false)closeLightbox();frames.forEach((frame,i)=>{const active=i===index;frame.hidden=!active;frame.classList.toggle('active',active);frame.setAttribute('aria-hidden',String(!active));});current=index;stage.dataset.step=ids[current];stage.dataset.section=frames[current].dataset.section;[...progress.children].forEach((button,i)=>button.setAttribute('aria-current',String(i===current)));updateNotes();if(start)startTimer();if(hash)history.replaceState(null,'','#'+ids[current]);document.dispatchEvent(new CustomEvent('pitch:step',{detail:{index:current,id:ids[current]}}));return ids[current];}
+function advance(delta){showFrame(current+delta);}
+ids.forEach((id,index)=>{const button=document.createElement('button');button.type='button';button.setAttribute('aria-label',speechData[id].title);button.title=speechData[id].title;if(index===2||index===7)button.className='group-end';button.addEventListener('click',()=>showFrame(index));progress.append(button);});
+function openLightbox(button){lastFocus=button;const image=document.getElementById('lightbox-image');image.src='screens/'+button.dataset.shot;image.alt=button.dataset.caption;document.getElementById('lightbox-caption').textContent=button.dataset.caption;lightbox.hidden=false;frames[current].inert=true;progress.inert=true;lightbox.focus();}
+function closeLightbox(){lightbox.hidden=true;frames[current].inert=false;progress.inert=false;if(lastFocus&&lastFocus.isConnected)lastFocus.focus({preventScroll:true});lastFocus=null;}
+document.querySelectorAll('[data-shot]').forEach(button=>button.addEventListener('click',()=>openLightbox(button)));
+lightbox.addEventListener('click',closeLightbox);
+function toggleNotes(){notes.hidden=!notes.hidden;if(!notes.hidden)startTimer();}
+document.getElementById('notes-close').addEventListener('click',()=>notes.hidden=true);
+async function toggleFullscreen(){try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen();}catch(error){console.warn('Fullscreen:',error.message);}}
+stage.addEventListener('click',event=>{if(event.target.closest('button,#notes,#lightbox'))return;advance(1);});
+addEventListener('keydown',event=>{if(event.altKey||event.ctrlKey||event.metaKey)return;const code=event.code;if(code==='Escape'){if(!lightbox.hidden){event.preventDefault();closeLightbox();}else if(!notes.hidden){event.preventDefault();notes.hidden=true;}return;}if(!lightbox.hidden){if(code==='Tab'){event.preventDefault();document.getElementById('lightbox-close').focus();}return;}if(['ArrowRight','Space','ArrowLeft','KeyF','KeyS','Digit1','Digit2','Digit3','Numpad1','Numpad2','Numpad3'].includes(code))event.preventDefault();else return;if(event.repeat)return;if(code==='ArrowRight'||code==='Space')advance(1);else if(code==='ArrowLeft')advance(-1);else if(code==='KeyF')toggleFullscreen();else if(code==='KeyS')toggleNotes();else if(code.endsWith('1'))showFrame('A1');else if(code.endsWith('2'))showFrame('B1');else if(code.endsWith('3'))showFrame('C');});
+const patterns=[[3,18,23,12,39,27],[8,14,27,18,49,25],[13,22,39,10,53,30],[3,29,36,17,58,22],[18,20,42,12,60,30],[8,23,36,14,55,33],[23,16,44,19,68,20],[14,20,39,14,57,27]];
+document.querySelector('.gantt').innerHTML=patterns.map((values,i)=>'<div class="gantt-row" style="--i:'+i+'">'+[0,1,2].map((_,j)=>'<i style="left:'+values[j*2]+'%;width:'+values[j*2+1]+'%"></i>').join('')+'</div>').join('');
+const requested=location.hash.slice(1);showFrame(ids.includes(requested)?requested:0,{start:false,hash:false});
+window.pitch={ids,get index(){return current;},get step(){return ids[current];},show:(id)=>showFrame(id,{start:false}),get notes(){return speechData;},get reducedMotion(){return reduced.matches;},finishAnimations:()=>document.getAnimations().forEach(a=>a.finish())};
+window.pitchReady=Promise.all([document.fonts.ready,...[...document.images].filter(image=>image.hasAttribute('src')).map(image=>image.decode().catch(()=>{}))]);
+</script>
+</body>
+</html>
