@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#167953">
 <title>Check-up Intelligence — PRIME</title>
 <link rel="stylesheet" href="/static/style.css">
 <style>/* правки 30.09 после ревью медэксперта — поверх темы */
@@ -18,7 +19,7 @@
 <header class="topbar">
   <a class="brand" href="/"><img src="/static/anketa/logo.svg" alt="Green Clinic" height="34"> <span>зелёный коридор чекапа PRIME</span></a>
   <button class="play-btn" id="btn-play" title="Автопоказ: один пациент проходит все этапы">▶ Демо</button>
-  <nav class="steps" id="steps">
+  <nav class="steps" id="steps" aria-label="Этапы чекапа">
     <button data-view="anketa" class="step active"><b>1</b> Анкета</button>
     <button data-view="program" class="step"><b>2</b> Программа</button>
     <button data-view="prep" class="step"><b>3</b> Подготовка</button>
