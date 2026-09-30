@@ -4,3 +4,4 @@ __pycache__/
 dist/
 qa_style/
 static/img/prep/_runtime/
+.claude/
