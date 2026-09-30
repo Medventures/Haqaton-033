@@ -29,7 +29,7 @@
         <li data-step="4"><span class="step-number">05</span><div><strong>Репродуктивное здоровье</strong><small>Дополнительные сведения для врача</small></div></li>
         <li data-step="5"><span class="step-number">06</span><div><strong>Подготовка</strong><small>Лекарства и особенности обследования</small></div></li>
       </ol>
-      <div class="privacy-note"><span aria-hidden="true">↳</span><p>Без имени, ИИН и телефона.<br>Ответы остаются в этой вкладке.</p></div>
+      <div class="privacy-note"><span aria-hidden="true">↳</span><p>Без имени, ИИН и телефона.<br>Ответы передаются серверу для подбора программы и не сохраняются.</p></div>
     </aside>
     <section class="form-panel" id="form-panel" aria-labelledby="step-title">
       <div class="panel-top"><span id="step-counter">ШАГ 01 / 06</span><span>АНКЕТА ЗДОРОВЬЯ</span></div>
@@ -54,6 +54,21 @@
         </div>
       </form>
       <section id="review" hidden aria-label="Проверка ответов"></section>
+      <section id="results-screen" hidden aria-label="Результат подбора программы">
+        <button id="results-back" class="back-button" type="button">← Вернуться к ответам</button>
+        <section id="recommendation" aria-label="Рекомендованная программа" hidden></section>
+        <div id="package-confirmation" class="package-card" hidden>
+          <h3>Продолжить с этой программой?</h3>
+          <p>Посмотрите, как может пройти ваш день обследования.</p>
+          <button id="package-proceed" class="primary-button recommend-button" type="button">Продолжить с этим пакетом <span aria-hidden="true">→</span></button>
+          <button id="package-edit" class="secondary-button" type="button">Изменить ответы</button>
+        </div>
+      </section>
+      <section id="itinerary-screen" hidden aria-label="Маршрут на один день">
+        <button id="itinerary-back" class="back-button" type="button">← Вернуться к программе</button>
+        <p class="review-notice">Пример маршрута: время и кабинеты условные. Это не запись на приём. Точный порядок и длительность обследований подтвердит клиника.</p>
+        <div id="itinerary-content"></div>
+      </section>
       <div class="panel-note"><span aria-hidden="true">✳</span><p>Анкета не ставит диагноз.<br>Программу обследования необходимо обсудить с врачом.</p></div>
     </section>
   </main>
