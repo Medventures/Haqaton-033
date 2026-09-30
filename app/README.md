@@ -12,6 +12,22 @@ the PRIME package by sex and full age (6 packages, as on primegc.kz), extras
 based on answers, a one-day route, preparation and a summary for the doctor.
 It does not call `/predict` or persist answers; refreshing clears them.
 
+## After the questionnaire (`app/static/flow.js`)
+
+Four sections, all built from `spec/rules.json` (no medical logic in code):
+- **Программа** — PRIME package by sex and full age + add-ons from `anamnesis_rules`
+  (draft, marked «подтверждает врач» until the curator approves); free screening items
+  show both options: «бесплатно в поликлинике, до 60 дней — или в PRIME сегодня».
+- **Подготовка** — items from `prep_catalog` that match the program, grouped by day;
+  each item has one question to confirm understanding; progress is visible to the curator.
+- **Куратор** — flags, patient's own words, state screening, program with checkboxes
+  (remove / add from `prime_catalog`), «Утвердить», then the final sheet: result per item,
+  conclusion (next checkup in a year / referral to a specialist), recommendations.
+- **Карта здоровья** — results and conclusion, history, reminders (prep, referral,
+  next checkup, free screening) and an `.ics` calendar download.
+
+Demo: patient and curator share one browser; state is kept in `localStorage`.
+
 ## Extending the form
 
 Edit `app/config/fields.py`: `STEPS` (titles, sidebar, optional steps; `*_m`
