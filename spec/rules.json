@@ -4,7 +4,8 @@
   "DSM174": "Приказ и.о. МЗ РК от 30.10.2020 № ҚР ДСМ-174/2020 в ред. № 71 от 29.07.2025, № 109 от 21.10.2025 и № 75 от 10.07.2026 (рег. МЮ 13.07.2026 № 39291) — clinical/normativ/",
   "PRIME": "primegc.kz/check-up и страницы пакетов primegc.kz/services/… (женский/мужской базовый до 40, женский/мужской расширенный после 40, детский мини/расширенный), сверено 30.09.2026; цены на сайте не опубликованы",
   "CLINIC_RULE": "Правило клиники — нормативной опоры нет, ТРЕБУЕТ ПОДТВЕРЖДЕНИЯ ВРАЧА, показывать с пометкой",
-  "DSM75": "Приказ МЗ РК от 10.07.2026 № 75: гепатиты B/C — все 18+ раз в 3 года; НОВЫЙ скрининг рака лёгкого (КТ ОГК); прил. 3 (группы риска) исключено — clinical/normativ/DSM75_2026-07-10_*"
+  "DSM75": "Приказ МЗ РК от 10.07.2026 № 75: гепатиты B/C — все 18+ раз в 3 года; НОВЫЙ скрининг рака лёгкого (КТ ОГК); прил. 3 (группы риска) исключено — clinical/normativ/DSM75_2026-07-10_*",
+  "ANAMNESIS_DRAFT": "Черновик Qorgan 30.09.2026: связь «ответ анкеты → услуга PRIME». Услуги — только из каталога primegc.kz. ТРЕБУЕТ УТВЕРЖДЕНИЯ ВРАЧА (медэксперт команды)"
  },
  "packages": [
   {
@@ -490,5 +491,453 @@
    "Колоноскопия — накануне очищение кишечника препаратом «Фортранс» по схеме врача",
    "После наркоза — отдых 30–40 минут; в этот день нельзя за руль, возьмите сопровождающего"
   ]
- }
+ },
+ "prime_catalog": [
+  {
+   "id": "c_therapist",
+   "name": "Консультация терапевта",
+   "url": "https://primegc.kz/services/terapiya/"
+  },
+  {
+   "id": "c_neuro",
+   "name": "Консультация невролога",
+   "url": "https://primegc.kz/services/nevrologiya/"
+  },
+  {
+   "id": "c_endo",
+   "name": "Консультация эндокринолога",
+   "url": "https://primegc.kz/services/endokrinologiya/"
+  },
+  {
+   "id": "c_gastro",
+   "name": "Консультация гастроэнтеролога",
+   "url": "https://primegc.kz/services/gastroenterologiya/"
+  },
+  {
+   "id": "c_pulmo",
+   "name": "Консультация пульмонолога",
+   "url": "https://primegc.kz/services/pulmonologiya/"
+  },
+  {
+   "id": "c_ophth",
+   "name": "Консультация офтальмолога",
+   "url": "https://primegc.kz/services/oftalmologiya/"
+  },
+  {
+   "id": "c_ent",
+   "name": "Консультация ЛОР-врача",
+   "url": "https://primegc.kz/services/otorinolaringologiya/"
+  },
+  {
+   "id": "c_uro_f",
+   "name": "Консультация уролога (женская урология)",
+   "url": "https://primegc.kz/services/zhenskaya-urologiya/"
+  },
+  {
+   "id": "c_hemat",
+   "name": "Консультация гематолога",
+   "url": "https://primegc.kz/services/gematologiya/"
+  },
+  {
+   "id": "c_rheum",
+   "name": "Консультация ревматолога",
+   "url": "https://primegc.kz/services/revmatologiya/"
+  },
+  {
+   "id": "c_allerg",
+   "name": "Консультация аллерголога-иммунолога",
+   "url": "https://primegc.kz/services/allergologiya-i-immunologiya/"
+  },
+  {
+   "id": "d_us",
+   "name": "УЗИ (по назначению)",
+   "url": "https://primegc.kz/services/uzi/"
+  },
+  {
+   "id": "d_xray",
+   "name": "Рентген (по назначению)",
+   "url": "https://primegc.kz/services/rentgen/"
+  },
+  {
+   "id": "d_ct",
+   "name": "КТ (по назначению)",
+   "url": "https://primegc.kz/services/kompyuternaya-tomografiya/"
+  },
+  {
+   "id": "d_mri",
+   "name": "МРТ (по назначению)",
+   "url": "https://primegc.kz/services/mrt/"
+  },
+  {
+   "id": "d_mammo",
+   "name": "Маммография",
+   "url": "https://primegc.kz/services/mammografiya/"
+  },
+  {
+   "id": "d_sti",
+   "name": "Обследование на половые инфекции (состав назначает врач)",
+   "url": null
+  }
+ ],
+ "anamnesis_rules": [
+  {
+   "id": "an_diabetes",
+   "when": {
+    "conditions": "diabetes"
+   },
+   "add": [
+    "c_endo"
+   ],
+   "why": "сахарный диабет",
+   "source": "ANAMNESIS_DRAFT",
+   "needs_doctor_validation": true
+  },
+  {
+   "id": "an_head",
+   "when": {
+    "conditions": "head_vessels"
+   },
+   "add": [
+    "c_neuro"
+   ],
+   "emphasize": [
+    "УЗДГ"
+   ],
+   "why": "инсульт, сосуды, головные боли",
+   "source": "ANAMNESIS_DRAFT",
+   "needs_doctor_validation": true
+  },
+  {
+   "id": "an_lungs",
+   "when": {
+    "conditions": "lungs"
+   },
+   "add": [
+    "c_pulmo"
+   ],
+   "emphasize": [
+    "КТ"
+   ],
+   "why": "проблемы с лёгкими",
+   "source": "ANAMNESIS_DRAFT",
+   "needs_doctor_validation": true
+  },
+  {
+   "id": "an_tb",
+   "when": {
+    "conditions": "tb"
+   },
+   "add": [
+    "c_pulmo"
+   ],
+   "emphasize": [
+    "КТ"
+   ],
+   "why": "туберкулёз",
+   "source": "ANAMNESIS_DRAFT",
+   "needs_doctor_validation": true
+  },
+  {
+   "id": "an_bowel",
+   "when": {
+    "conditions": "bowel"
+   },
+   "add": [
+    "c_gastro"
+   ],
+   "emphasize": [
+    "колоноскопия"
+   ],
+   "why": "запоры, полипы, кишечник",
+   "source": "ANAMNESIS_DRAFT",
+   "needs_doctor_validation": true
+  },
+  {
+   "id": "an_hepatitis",
+   "when": {
+    "conditions": "hepatitis"
+   },
+   "add": [
+    "c_gastro"
+   ],
+   "emphasize": [
+    "печёночные"
+   ],
+   "why": "хронический гепатит",
+   "source": "ANAMNESIS_DRAFT",
+   "needs_doctor_validation": true
+  },
+  {
+   "id": "an_glaucoma",
+   "when": {
+    "conditions": "glaucoma"
+   },
+   "add": [
+    "c_ophth"
+   ],
+   "why": "глаукома",
+   "skip_if_in_package": "офтальмолог",
+   "source": "ANAMNESIS_DRAFT",
+   "needs_doctor_validation": true
+  },
+  {
+   "id": "an_bleeding",
+   "when": {
+    "conditions": "bleeding"
+   },
+   "add": [
+    "c_hemat"
+   ],
+   "why": "кровотечения",
+   "source": "ANAMNESIS_DRAFT",
+   "needs_doctor_validation": true
+  },
+  {
+   "id": "an_pressure",
+   "when": {
+    "conditions": "pressure"
+   },
+   "emphasize": [
+    "ЭхоКГ",
+    "УЗДГ"
+   ],
+   "why": "повышенное давление",
+   "source": "ANAMNESIS_DRAFT",
+   "needs_doctor_validation": true
+  },
+  {
+   "id": "an_heart",
+   "when": {
+    "conditions": "heart"
+   },
+   "emphasize": [
+    "ЭхоКГ"
+   ],
+   "why": "боли в сердце, инфаркт",
+   "source": "ANAMNESIS_DRAFT",
+   "needs_doctor_validation": true
+  },
+  {
+   "id": "an_legs",
+   "when": {
+    "conditions": "legs"
+   },
+   "emphasize": [
+    "УЗДГ"
+   ],
+   "why": "боли в ногах при ходьбе",
+   "source": "ANAMNESIS_DRAFT",
+   "needs_doctor_validation": true
+  },
+  {
+   "id": "an_breast",
+   "when": {
+    "conditions": "breast"
+   },
+   "emphasize": [
+    "молочн",
+    "Маммограф"
+   ],
+   "why": "уплотнения в молочной железе",
+   "source": "ANAMNESIS_DRAFT",
+   "needs_doctor_validation": true
+  },
+  {
+   "id": "an_urine_f",
+   "when": {
+    "conditions": "urine",
+    "sex": "F"
+   },
+   "add": [
+    "c_uro_f"
+   ],
+   "why": "проблемы с мочеиспусканием",
+   "source": "ANAMNESIS_DRAFT",
+   "needs_doctor_validation": true
+  },
+  {
+   "id": "an_urine_m",
+   "when": {
+    "conditions": "urine",
+    "sex": "M"
+   },
+   "emphasize": [
+    "ПСА",
+    "предстательной"
+   ],
+   "why": "проблемы с мочеиспусканием",
+   "source": "ANAMNESIS_DRAFT",
+   "needs_doctor_validation": true
+  },
+  {
+   "id": "an_discharge",
+   "when": {
+    "discharge": "yes"
+   },
+   "add": [
+    "d_sti"
+   ],
+   "why": "выделения, запах",
+   "source": "ANAMNESIS_DRAFT",
+   "needs_doctor_validation": true
+  },
+  {
+   "id": "an_dysuria",
+   "when": {
+    "dysuria": "yes"
+   },
+   "add": [
+    "d_sti"
+   ],
+   "emphasize": [
+    "ПСА",
+    "предстательной"
+   ],
+   "why": "боль при мочеиспускании, выделения",
+   "source": "ANAMNESIS_DRAFT",
+   "needs_doctor_validation": true
+  },
+  {
+   "id": "an_fam_crc",
+   "when": {
+    "family_history": "colorectal_cancer"
+   },
+   "emphasize": [
+    "колоноскопия"
+   ],
+   "why": "рак кишечника в семье",
+   "source": "ANAMNESIS_DRAFT",
+   "needs_doctor_validation": true
+  },
+  {
+   "id": "an_fam_breast",
+   "when": {
+    "family_history": "breast_cancer",
+    "sex": "F"
+   },
+   "emphasize": [
+    "молочн",
+    "Маммограф",
+    "Онкомаркеры"
+   ],
+   "why": "рак молочной железы или яичников в семье",
+   "source": "ANAMNESIS_DRAFT",
+   "needs_doctor_validation": true
+  },
+  {
+   "id": "an_fam_cvd",
+   "when": {
+    "family_history": "early_cvd"
+   },
+   "emphasize": [
+    "ЭхоКГ",
+    "Липидный"
+   ],
+   "why": "инфаркт или инсульт у родных до 60 лет",
+   "source": "ANAMNESIS_DRAFT",
+   "needs_doctor_validation": true
+  },
+  {
+   "id": "an_fam_diabetes",
+   "when": {
+    "family_history": "diabetes"
+   },
+   "emphasize": [
+    "глюкоз",
+    "Гликированный"
+   ],
+   "why": "сахарный диабет в семье",
+   "source": "ANAMNESIS_DRAFT",
+   "needs_doctor_validation": true
+  }
+ ],
+ "prep_catalog": [
+  {
+   "id": "pr_thinners",
+   "when_answer": {
+    "blood_thinners": "yes"
+   },
+   "match": [
+    "под анестезией"
+   ],
+   "day": "now",
+   "title": "Препараты, разжижающие кровь",
+   "text": "Вы отметили, что принимаете их. Не отменяйте сами — позвоните врачу-куратору: он скажет, нужна ли пауза перед гастро- и колоноскопией.",
+   "question": "Можно ли самому перестать пить таблетки за неделю до чекапа?",
+   "options": [
+    "Да, так безопаснее",
+    "Нет, только по слову врача"
+   ],
+   "correct": 1,
+   "source": "Анкета + правило подготовки к эндоскопии, утверждает врач"
+  },
+  {
+   "id": "pr_colon",
+   "match": [
+    "олоноскопия"
+   ],
+   "day": "eve",
+   "title": "Колоноскопия — очищение кишечника",
+   "text": "Препарат «Фортранс» по схеме врача. Если кишечник не очищен, осмотр переносят на другой день.",
+   "question": "Когда начинаете пить «Фортранс»?",
+   "options": [
+    "Утром в день чекапа",
+    "Накануне, по схеме врача"
+   ],
+   "correct": 1,
+   "source": "Страницы пакетов primegc.kz, раздел подготовки (30.09.2026)"
+  },
+  {
+   "id": "pr_blood",
+   "match": [
+    "анализ",
+    "Липидный",
+    "ПСА",
+    "Онкомаркеры",
+    "глюкоз"
+   ],
+   "day": "morning",
+   "title": "Анализы крови — строго натощак",
+   "text": "Не есть 8–12 часов. Воду пить можно. Еда и сладкие напитки искажают сахар и холестерин.",
+   "question": "Можно ли утром выпить кофе с сахаром?",
+   "options": [
+    "Да, немного",
+    "Нет, только воду"
+   ],
+   "correct": 1,
+   "source": "Страницы пакетов primegc.kz, раздел подготовки (30.09.2026)"
+  },
+  {
+   "id": "pr_gastro",
+   "match": [
+    "Гастроскопия"
+   ],
+   "day": "morning",
+   "title": "Гастроскопия — без еды 8 часов, без воды 2 часа",
+   "text": "Не есть 8 часов и не пить 2 часа до процедуры. Точное время гастроскопии будет в маршруте.",
+   "question": "За сколько часов до гастроскопии нельзя пить даже воду?",
+   "options": [
+    "За 2 часа",
+    "За 15 минут"
+   ],
+   "correct": 0,
+   "source": "Страницы пакетов primegc.kz, раздел подготовки (30.09.2026)"
+  },
+  {
+   "id": "pr_anesthesia",
+   "match": [
+    "под анестезией"
+   ],
+   "day": "after",
+   "title": "После наркоза — не за руль",
+   "text": "Отдых 30–40 минут в клинике. В этот день нельзя садиться за руль — возьмите сопровождающего или такси.",
+   "question": "Можно ли уехать домой за рулём через час после чекапа?",
+   "options": [
+    "Да, если чувствую себя хорошо",
+    "Нет, в этот день нельзя"
+   ],
+   "correct": 1,
+   "source": "Страницы пакетов primegc.kz, раздел подготовки (30.09.2026)"
+  }
+ ]
 }
