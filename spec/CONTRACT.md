@@ -9,7 +9,7 @@
 | `sex` | select | `M` / `F` | да |
 | `birth_year` | number | 1920–2025 | да |
 | `checkup_year` | number | по умолчанию текущий (2026) | нет |
-| `registered` | multiselect | `hypertension` АГ · `ihd` ИБС · `diabetes` СД · `glaucoma` глаукома · `cerebrovascular` · `breast_cancer` · `cervical_cancer` · `colorectal` — «состою на учёте (динамическое наблюдение)» | нет |
+| `registered` | multiselect | `hypertension` АГ · `ihd` ИБС · `diabetes` СД · `glaucoma` глаукома · `cerebrovascular` · `breast_cancer` · `cervical_cancer` · `colorectal` · `lung_cancer` · `chronic_hepatitis` — «состою на учёте (динамическое наблюдение)» | нет |
 | `complaints` | multiselect | `fatigue` усталость · `chest_pain` боль в груди | нет |
 | `family_history` | multiselect | `colorectal_cancer` рак кишечника у родственника | нет |
 | `risk_group` | multiselect | группы риска по гепатитам (см. `rules.json`, `scr_hepatitis`) | нет |
@@ -17,6 +17,8 @@
 | `urgent` | select | `chest_pain` · `dyspnea` · `stroke_signs` · `none` → любой кроме `none` = красный флаг, пакет не предлагать | да |
 | `pregnant` | select | `yes` · `no` · `unsure` (Ж 18–55) → без КТ/маммографии/рентгена, «обсудите с врачом» | нет |
 | `attached_to` | select | `green_clinic` · `other` · `unknown` → где делать бесплатную часть | нет |
+| `smoking` | dict | `{"pack_years": 25, "quit_years_ago": 0}` — для скрининга лёгких (№ 75) | нет |
+| `hazardous_work_10y` | bool | 10 лет на вредном производстве | нет |
 | `last_screening` | dict | `{"scr_breast": 2025, ...}` — год последнего скрининга; если не прошёл период — не предлагать | нет |
 
 ## Выход
