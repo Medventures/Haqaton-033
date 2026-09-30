@@ -55,6 +55,8 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .step-h .opt { font-size: 12px; color: var(--muted); }
 .q { display: grid; gap: 7px; }
 .q > label, .q > .ql { font-weight: 600; color: var(--ink); font-size: 14.5px; }
+.qgroup { display: grid; gap: 14px; border: 1px solid var(--line); background: var(--soft); border-radius: 10px; padding: 14px; }
+.qgroup-h { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--teal); }
 .q .hint { font-size: 12.5px; color: var(--muted); margin-top: -3px; }
 .q.custom > .ql::after { content: "свой вопрос"; margin-left: 8px; font: 600 11px var(--f-body); color: var(--violet); background: var(--violet-soft); padding: 1px 7px; border-radius: 99px; vertical-align: 2px; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -162,6 +164,7 @@ pre.json { background: var(--soft); border-radius: 8px; padding: 12px; font: 12p
               <option value="multi">Несколько вариантов</option>
               <option value="number">Число</option>
               <option value="text">Свободный текст</option>
+              <option value="date">Дата</option>
             </select></label>
           <label class="f"><span>Шаг анкеты</span>
             <select id="e-step"></select></label>
@@ -189,29 +192,68 @@ pre.json { background: var(--soft); border-radius: 8px; padding: 12px; font: 12p
 <script>
 const RULES = /*RULES_JSON*/null;
 const YEAR = new Date().getFullYear();
-const STEPS = { 1: "Кто вы", 2: "Безопасность", 3: "Учёт и прошлые обследования", 4: "Жалобы и семья", 5: "Дополнительно" };
-const LS_KEY = "qorgan-anketa-v2";
+const STEPS = { 1: "Кто вы", 2: "Самочувствие сейчас", 3: "Женское здоровье / Мужское здоровье", 4: "Здоровье и обследования", 5: "Болезни в семье", 6: "Дополнительно" };
+const LS_KEY = "qorgan-anketa-v4";
 
 /* ---------- базовые вопросы (spec/QUESTIONNAIRE.md) ---------- */
+// Состояния шага 3: [код, как понятно пациенту, пол, код учёта для правил скрининга (rules.json not_registered)]
+const CONDITIONS = [
+  ["pressure", "Повышенное давление", null, "hypertension"],
+  ["heart", "Боли в сердце, перенесённый инфаркт", null, "ihd"],
+  ["diabetes", "Сахарный диабет", null, "diabetes"],
+  ["glaucoma", "Глаукома", null, "glaucoma"],
+  ["head_vessels", "Инсульт, проблемы с сосудами, частые головные боли", null, "cerebrovascular"],
+  ["legs", "Боли в ногах при ходьбе, судороги, спазмы", null, null],
+  ["breast", "Молочная железа: уплотнения, фиброаденома, опухоль", "F", "breast_cancer"],
+  ["hpv", "ВПЧ или изменения шейки матки", "F", "cervical_cancer"],
+  ["bowel", "Запоры, полипы или опухоль кишечника", null, "colorectal"],
+  ["lungs", "Проблемы с лёгкими", null, "lung_cancer"],
+  ["tb", "Туберкулёз", null, null],
+  ["hepatitis", "Хронический гепатит B или C", null, "chronic_hepatitis"],
+  ["urine", "Проблемы с мочеиспусканием", null, null],
+  ["bleeding", "Кровотечения (были раньше)", null, null],
+];
+const PLAIN = {
+  scr_cvd: ["Давление, сердце, сахар, глаза", "анализы крови на холестерин и сахар, измерение давления в глазу"],
+  scr_cerebro: ["Сосуды шеи и головы", "УЗИ сосудов шеи"],
+  scr_breast: ["Молочная железа", "маммография"],
+  scr_cervix: ["Шейка матки", "мазок на онкоцитологию или ВПЧ"],
+  scr_colorectal: ["Кишечник", "анализ кала на скрытую кровь"],
+  scr_hepatitis: ["Гепатиты B и C", "анализ крови"],
+  scr_lung: ["Лёгкие", "КТ лёгких"],
+};
+const plainName = (s) => (PLAIN[s.id] || [s.name])[0];
+const plainWhat = (s) => (PLAIN[s.id] || [null, s.stage1.filter((x) => !/^Приём/.test(x)).join(", ")])[1];
+const REG_OF = Object.fromEntries(CONDITIONS.map((c) => [c[0], c[3]]));
+const SMOKE_DETAILS = (a) => a.smoke_status === "smokes" || (a.smoke_status === "quit" && Number(a.quit_years_ago) <= 15);
 const BASE = [
   { id: "for_child", step: 1, type: "single", text: "Для кого подбираем?", options: [["self", "Для себя"], ["child", "Для ребёнка"]] },
   { id: "sex", step: 1, type: "single", text: "Пол", options: [["F", "Женский"], ["M", "Мужской"]] },
-  { id: "birth_year", step: 1, type: "number", text: "Год рождения", hint: "Возраст считаем по году, как в приказе о скрининге" },
-  { id: "urgent", step: 2, type: "single", text: "Что-то беспокоит прямо сейчас?", options: [["none", "Нет"], ["chest_pain", "Боль или давление в груди"], ["dyspnea", "Сильная одышка"], ["stroke_signs", "Внезапная слабость в руке или ноге, нарушение речи"]] },
-  { id: "pregnant", step: 2, type: "single", text: "Беременны или можете быть беременны?", show: { sex: "F", amin: 18, amax: 55, adult: true }, options: [["no", "Нет"], ["yes", "Да"], ["unsure", "Не уверена"]] },
-  { id: "registered", step: 3, type: "multi", text: "Состоите на учёте у врача?", hint: "Динамическое наблюдение: скрининг по «своему» заболеванию не положен", options: [["hypertension", "Гипертония"], ["ihd", "Ишемическая болезнь сердца"], ["diabetes", "Сахарный диабет"], ["glaucoma", "Глаукома"], ["cerebrovascular", "Инсульт, сосуды мозга"], ["breast_cancer", "Онкология молочной железы", "F"], ["cervical_cancer", "Онкология шейки матки", "F"], ["colorectal", "Онкология или полипы кишечника"], ["lung_cancer", "Онкология лёгких"], ["chronic_hepatitis", "Хронический гепатит B или C"]] },
-  { id: "smoke_status", step: 3, type: "single", text: "Вы курите или курили?", hint: "Для бесплатной КТ лёгких (приказ № 75 от 10.07.2026)", show: { amin: 50, amax: 70, adult: true }, options: [["never", "Не курил(а)"], ["smokes", "Курю"], ["quit", "Бросил(а)"]] },
-  { id: "quit_years_ago", step: 3, type: "number", text: "Сколько лет назад бросили?", show: { amin: 50, amax: 70, adult: true, if: (a) => a.smoke_status === "quit" } },
-  { id: "cigs_per_day", step: 3, type: "number", text: "Сколько сигарет в день?", show: { amin: 50, amax: 70, adult: true, if: (a) => a.smoke_status === "smokes" || (a.smoke_status === "quit" && Number(a.quit_years_ago) <= 15) } },
-  { id: "smoke_years", step: 3, type: "number", text: "Сколько лет курите (курили)?", show: { amin: 50, amax: 70, adult: true, if: (a) => a.smoke_status === "smokes" || (a.smoke_status === "quit" && Number(a.quit_years_ago) <= 15) } },
-  { id: "hazardous_work_10y", step: 3, type: "single", text: "Последние 10 лет работали на вредном производстве?", hint: "Перечень профессий — приказ МТСЗН № 170", show: { amin: 50, amax: 70, adult: true }, options: [["no", "Нет"], ["yes", "Да"]] },
-  { id: "last_screening", step: 3, type: "multi", text: "Что проходили за последние 2 года?", options: [["scr_breast", "Маммография", "F"], ["scr_cervix", "Мазок, ПАП-тест", "F"], ["scr_colorectal", "Тест на скрытую кровь"], ["scr_cvd", "Анализы на холестерин и сахар"]] },
-  { id: "attached_to", step: 3, type: "single", text: "Вы прикреплены к поликлинике?", options: [["green_clinic", "К Green Clinic"], ["other", "К другой поликлинике"], ["unknown", "Не знаю"]] },
-  { id: "complaints", step: 4, type: "multi", text: "Что хотелось бы проверить?", options: [["fatigue", "Постоянная усталость"], ["heart", "Сердце и давление"], ["gi", "Желудок и кишечник"], ["thyroid", "Щитовидная железа"], ["general", "Просто проверить здоровье"]] },
-  { id: "family_history", step: 4, type: "multi", text: "Было ли у родителей, братьев, сестёр?", options: [["colorectal_cancer", "Рак кишечника"], ["breast_cancer", "Рак молочной железы"], ["early_cvd", "Инфаркт или инсульт до 60 лет"], ["diabetes", "Сахарный диабет"]] },
+  { id: "birth_date", step: 1, type: "date", text: "Дата рождения" },
+  { id: "urgent", step: 2, type: "single", text: "Беспокоит ли что-то прямо сейчас?", hint: "Если да — это не чекап: нужна помощь врача сегодня", options: [["none", "Нет, чувствую себя как обычно"], ["chest_pain", "Боль или давление в груди"], ["dyspnea", "Сильная одышка"], ["stroke_signs", "Внезапная слабость в руке или ноге, трудно говорить"], ["other_now", "Другое, что беспокоит сейчас"]] },
+  { id: "last_period", step: 3, type: "date", text: "Дата начала последних месячных", hint: "Если месячных уже нет — оставьте пустым", show: { sex: "F", amin: 12, amax: 55, adult: true } },
+  { id: "pregnant", step: 3, type: "single", text: "Вы беременны или можете быть беременны?", show: { sex: "F", amin: 15, amax: 55, adult: true }, options: [["no", "Нет"], ["yes", "Да"], ["unsure", "Не уверена"]] },
+  { id: "pregnancies", step: 3, type: "number", text: "Сколько у вас было беременностей?", hint: "Если не было — поставьте 0", show: { sex: "F", amin: 15, adult: true } },
+  { id: "births", step: 3, type: "number", text: "Сколько было родов?", show: { sex: "F", amin: 15, adult: true, if: (a) => Number(a.pregnancies) > 0 } },
+  { id: "contraception", step: 3, type: "single", text: "Чем предохраняетесь?", show: { sex: "F", amin: 15, amax: 55, adult: true }, options: [["none", "Ничем"], ["condom", "Презерватив"], ["pills", "Таблетки"], ["iud", "Спираль"], ["other", "Другое"], ["not_needed", "Не нужно"]] },
+  { id: "discharge_f", step: 3, type: "single", text: "Есть ли выделения из половых путей, неприятный запах?", show: { sex: "F", amin: 15, adult: true }, options: [["no", "Нет"], ["yes", "Да"]] },
+  { id: "dysuria_m", step: 3, type: "single", text: "Есть ли боль или жжение при мочеиспускании, выделения?", show: { sex: "M", amin: 15, adult: true }, options: [["no", "Нет"], ["yes", "Да"]] },
+  { id: "conditions", step: 4, type: "multi", text: "Что из этого у вас есть или было?", hint: "Отметьте всё, что подходит", options: [...CONDITIONS.map((c) => [c[0], c[1], c[2]]), ["none", "Ничего из этого"]] },
+  { id: "registered_on", step: 4, type: "multi", text: "По чему из отмеченного вы стоите на учёте у врача?", hint: "Если стоите на учёте — это обследование ведёт ваш врач", pickedFrom: "conditions",
+    show: { if: (a) => (a.conditions || []).some((c) => REG_OF[c]) }, options: CONDITIONS.filter((c) => c[3]).map((c) => [c[0], c[1], c[2]]) },
+  { id: "conditions_other", step: 4, type: "text", text: "Другое — впишите своё", hint: "Если чего-то нет в списке", show: { if: (a) => !(a.conditions || []).includes("none") } },
+  { id: "smoke_status", step: 4, type: "single", text: "Вы курите или курили?", options: [["never", "Не курил(а)"], ["smokes", "Курю"], ["quit", "Бросил(а)"]] },
+  { id: "quit_years_ago", step: 4, type: "number", text: "Сколько лет назад бросили?", show: { if: (a) => a.smoke_status === "quit" } },
+  { id: "cigs_per_day", step: 4, type: "number", text: "Сколько сигарет в день?", show: { if: SMOKE_DETAILS } },
+  { id: "smoke_years", step: 4, type: "number", text: "Сколько лет курите (курили)?", show: { if: SMOKE_DETAILS } },
+  { id: "hazardous_work_10y", step: 4, type: "single", text: "Последние 10 лет работали на вредном производстве?", hint: "Если не уверены — отметьте «Да», врач уточнит", show: { amin: 50, amax: 70, adult: true }, options: [["no", "Нет"], ["yes", "Да"]] },
+  { id: "last_screening", step: 4, type: "multi", text: "Что проходили за последние 2 года?", options: [["scr_breast", "Маммография", "F"], ["scr_cervix", "Мазок на онкоцитологию или ВПЧ", "F"], ["scr_colorectal", "Анализ кала на скрытую кровь"], ["scr_cvd", "Анализы на холестерин и сахар"]] },
+  { id: "attached_to", step: 4, type: "single", text: "Вы прикреплены к поликлинике?", options: [["green_clinic", "К Green Clinic"], ["other", "К другой поликлинике"], ["unknown", "Не знаю"]] },
+  { id: "family_history", step: 5, type: "multi", text: "Было ли у родителей, братьев, сестёр?", options: [["colorectal_cancer", "Рак кишечника"], ["breast_cancer", "Рак молочной железы или яичников"], ["other_cancer", "Другой рак"], ["early_cvd", "Инфаркт или инсульт до 60 лет"], ["hypertension", "Повышенное давление"], ["diabetes", "Сахарный диабет"], ["tb", "Туберкулёз"], ["none", "Нет или не знаю"]] },
+  { id: "medications", step: 6, type: "textarea", text: "Какие лекарства принимаете сейчас?", hint: "Названия и как принимаете, если помните. Если никаких — оставьте пустым" },
 ];
-const DEMO_ANSWERS = { for_child: "self", sex: "F", birth_year: 1984, urgent: "none", pregnant: "no", registered: [], last_screening: [], attached_to: "green_clinic", complaints: ["fatigue"], family_history: [] };
-const DEMO_CUSTOM = [{ id: "c_allergy", step: 5, type: "single", text: "Была ли аллергия на контраст или лекарства?", hint: "Пример своего вопроса — можно изменить или удалить в редакторе", options: [{ label: "Нет", action: "" }, { label: "Да", action: "doctor" }, { label: "Не знаю", action: "" }] }];
+const DEMO_ANSWERS = { for_child: "self", sex: "F", birth_date: "1984-05-12", urgent: "none", last_period: "2026-09-12", pregnant: "no", pregnancies: 2, discharge_f: "no", conditions: ["none"], registered_on: [], smoke_status: "never", last_screening: [], attached_to: "green_clinic", family_history: ["diabetes"], births: 2, contraception: "iud", medications: "" };
+const DEMO_CUSTOM = [{ id: "c_allergy", step: 6, type: "single", text: "Была ли аллергия на лекарства или контраст?", hint: "Пример своего вопроса — можно изменить или удалить в редакторе", options: [{ label: "Нет", action: "" }, { label: "Да", action: "doctor" }, { label: "Не знаю", action: "" }] }];
 
 /* ---------- состояние ---------- */
 let state = { custom: DEMO_CUSTOM, hidden: [], answers: { ...DEMO_ANSWERS } };
@@ -223,7 +265,11 @@ const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), 1800); }
 
-function ageYear(a) { const y = Number(a.birth_year); return y > 1900 && y <= YEAR ? YEAR - y : null; }
+function birthYear(a) { const y = Number(String(a.birth_date || "").slice(0, 4)) || Number(a.birth_year); return y > 1900 && y <= YEAR ? y : null; }
+function ageYear(a) { const y = birthYear(a); return y ? YEAR - y : null; }
+function fullAge(a) { if (!a.birth_date) return null; const b = new Date(a.birth_date), n = new Date(); if (isNaN(b)) return null;
+  return n.getFullYear() - b.getFullYear() - (n < new Date(n.getFullYear(), b.getMonth(), b.getDate()) ? 1 : 0); }
+function regKeys(a) { const picked = a.registered_on || []; return [...new Set([...(a.registered || []), ...picked.filter((c) => (a.conditions || []).includes(c)).map((c) => REG_OF[c]).filter(Boolean)])]; }
 function visible(q, a) {
   const age = ageYear(a), sh = q.show || {};
   if (sh.sex && a.sex !== sh.sex) return false;
@@ -243,22 +289,28 @@ function allQuestions() {
 /* ---------- отрисовка анкеты ---------- */
 function renderForm() {
   const a = state.answers, qs = allQuestions(), f = $("#form");
-  let html = "";
+  let html = "", shown = 0;
   for (const step of Object.keys(STEPS).map(Number)) {
     const inStep = qs.filter((q) => q.step === step && visible(q, a));
     if (!inStep.length) continue;
-    html += `<div class="step"><div class="step-h"><span class="n">ШАГ ${step}</span><h2>${STEPS[step]}</h2>${step >= 4 ? '<span class="opt">можно пропустить</span>' : ""}</div>`;
+    html += `<div class="step"><div class="step-h"><span class="n">ШАГ ${++shown}</span><h2>${step === 3 ? (a.sex === "M" ? "Мужское здоровье" : "Женское здоровье") : STEPS[step]}</h2>${step >= 5 ? '<span class="opt">можно пропустить</span>' : ""}</div>`;
+    let openGroup = null;
     for (const q of inStep) {
+      if (openGroup && q.group !== openGroup) { html += `</div>`; openGroup = null; }
+      if (q.group && q.group !== openGroup) { html += `<div class="qgroup"><div class="qgroup-h">${esc(q.group)}</div>`; openGroup = q.group; }
       const cls = q.custom ? "q custom" : "q";
       const hint = q.hint ? `<div class="hint">${esc(q.hint)}</div>` : "";
-      if (q.type === "number") {
-        const extra = q.id === "birth_year" && ageYear(a) != null ? `<span class="age">в ${YEAR} году — ${ageYear(a)} ${plural(ageYear(a))}</span>` : "";
-        html += `<div class="${cls}"><label class="ql" for="q-${q.id}">${esc(q.text)}</label>${hint}<div style="display:flex;gap:10px;align-items:center"><input type="number" id="q-${q.id}" data-q="${q.id}" value="${esc(a[q.id] ?? "")}">${extra}</div></div>`;
+      if (q.type === "number" || q.type === "date") {
+        const fa = fullAge(a);
+        const extra = q.id === "birth_date" && fa != null ? `<span class="age">${fa} ${plural(fa)}</span>` : "";
+        html += `<div class="${cls}"><label class="ql" for="q-${q.id}">${esc(q.text)}</label>${hint}<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><input type="${q.type}" id="q-${q.id}" data-q="${q.id}" value="${esc(a[q.id] ?? "")}" ${q.type === "date" ? `max="${new Date().toISOString().slice(0, 10)}"` : 'min="0"'}>${extra}</div></div>`;
+      } else if (q.type === "textarea") {
+        html += `<div class="${cls}"><label class="ql" for="q-${q.id}">${esc(q.text)}</label>${hint}<textarea id="q-${q.id}" data-q="${q.id}">${esc(a[q.id] ?? "")}</textarea></div>`;
       } else if (q.type === "text") {
         html += `<div class="${cls}"><label class="ql" for="q-${q.id}">${esc(q.text)}</label>${hint}<input type="text" id="q-${q.id}" data-q="${q.id}" value="${esc(a[q.id] ?? "")}"></div>`;
       } else {
         const multi = q.type === "multi", cur = a[q.id];
-        const opts = q.options.filter((o) => !o[2] || o[2] === a.sex);
+        const opts = q.options.filter((o) => (!o[2] || o[2] === a.sex) && (!q.pickedFrom || (a[q.pickedFrom] || []).includes(o[0])));
         html += `<div class="${cls}" role="group" aria-label="${esc(q.text)}"><div class="ql">${esc(q.text)}</div>${hint}<div class="chips">` +
           opts.map(([v, l]) => {
             const on = multi ? (cur || []).includes(v) : cur === v;
@@ -267,19 +319,28 @@ function renderForm() {
           }).join("") + `</div></div>`;
       }
     }
+    if (openGroup) html += `</div>`;
     html += `</div>`;
+    if (step === 2 && a.urgent && a.urgent !== "none") {
+      html += `<div class="red"><h3>Это не чекап</h3><p>Если что-то беспокоит прямо сейчас, нужна помощь врача сегодня. При острой боли, одышке, слабости в руке или ноге — звоните <b>103</b>.</p><p class="note">Дальше анкета не заполняется.</p></div>`;
+      break;
+    }
   }
-  html += `<div class="actions"><button type="button" class="btn" id="demo">Пример: женщина, 1984</button><button type="button" class="btn" id="demo2">Пример: боль в груди</button><button type="button" class="btn" id="clear">Очистить</button></div>`;
+  html += `<div class="actions"><button type="button" class="btn" id="demo">Пример: женщина, 42 года</button><button type="button" class="btn" id="demo2">Пример: боль в груди</button><button type="button" class="btn" id="clear">Очистить</button></div>`;
   f.innerHTML = html;
 }
 $("#form").addEventListener("input", (e) => {
   const el = e.target, id = el.dataset.q; if (!id) return;
   const q = allQuestions().find((x) => x.id === id);
-  if (q.type === "multi") state.answers[id] = [...document.querySelectorAll(`input[name="${id}"]:checked`)].map((x) => x.value);
+  if (q.type === "multi") {
+    let v = [...document.querySelectorAll(`input[name="${id}"]:checked`)].map((x) => x.value);
+    if (v.includes("none") && v.length > 1) v = el.value === "none" ? ["none"] : v.filter((x) => x !== "none"); // «ничего / нет» не сочетается с остальным
+    state.answers[id] = v;
+  }
   else if (q.type === "number") state.answers[id] = el.value === "" ? "" : Number(el.value);
   else state.answers[id] = el.value;
   save(); renderResult();
-  if (["sex", "birth_year", "for_child", "smoke_status", "quit_years_ago"].includes(id)) { const pos = el.id; renderForm(); const back = document.getElementById(pos); if (back && q.type === "number") { back.focus(); back.setSelectionRange?.(99, 99); } }
+  if (["sex", "birth_date", "for_child", "urgent", "pregnancies", "conditions", "family_history", "smoke_status", "quit_years_ago"].includes(id)) { const pos = el.id; renderForm(); const back = document.getElementById(pos); if (back && q.type === "number") { back.focus(); try { back.setSelectionRange?.(99, 99); } catch (_) { /* у полей даты и числа выделения нет */ } } }
 });
 $("#form").addEventListener("click", (e) => {
   if (e.target.id === "demo") state.answers = { ...DEMO_ANSWERS };
@@ -298,7 +359,7 @@ function compute(a) {
     const q = allQuestions().find((x) => x.id === c.id);
     if (!q || !visible(q, a)) continue;
     const v = a[c.id]; const picked = c.type === "multi" ? (v || []) : (v === undefined || v === "" ? [] : [v]);
-    if (c.type === "number" || c.type === "text") { if (picked.length) out.doctor.push(`${c.text}: ${picked[0]}`); continue; }
+    if (c.type === "number" || c.type === "text" || c.type === "date" || c.type === "textarea") { if (picked.length) out.doctor.push(`${c.text}: ${picked[0]}`); continue; }
     for (const i of picked) { const o = c.options[Number(i)]; if (!o) continue;
       if (o.action === "red") { out.red = { reason: `${c.text} — ${o.label}` }; return out; }
       if (o.action === "doctor") out.doctor.push(`${c.text}: ${o.label}`);
@@ -306,7 +367,7 @@ function compute(a) {
   }
   if (age == null || !a.sex) return out;
   out.pregnant = a.sex === "F" && ["yes", "unsure"].includes(a.pregnant) && a.for_child !== "child";
-  const reg = a.registered || [], last = a.last_screening || [];
+  const reg = regKeys(a), last = a.last_screening || [];
   if (a.for_child !== "child") for (const s of RULES.screening) {
     const w = s.when;
     if (w.sex && !w.sex.includes(a.sex)) continue;
@@ -316,7 +377,7 @@ function compute(a) {
     if (w.not_pregnant && out.pregnant) { out.notFree.push({ s, why: "при беременности — по отдельному порядку, обсудите с врачом" }); continue; }
     if (w.any_of && !w.any_of.some((c) => (c.pack_years_min != null && packYears(a) >= c.pack_years_min && quitYears(a) <= c.quit_years_max) || (c.hazardous_work_10y && a.hazardous_work_10y === "yes"))) continue;
     const onReg = (w.not_registered || []).filter((r) => reg.includes(r));
-    if (onReg.length) { out.notFree.push({ s, why: "вы на учёте — обследование у вашего врача по наблюдению" }); continue; }
+    if (onReg.length) { out.notFree.push({ s, why: "вы стоите на учёте — это обследование ведёт ваш врач" }); continue; }
     if (last.includes(s.id) && s.repeat_years >= 2) { out.notFree.push({ s, why: "проходили в последние 2 года — повтор бесплатно пока не положен" }); continue; }
     out.free.push(s);
   }
@@ -337,30 +398,44 @@ function compute(a) {
     out.pkgExams = list.map((e) => ({ exam: e, free: overlap.has(e) && fully(e), part: overlap.has(e) && !fully(e),preg: out.pregnant && /КТ|Маммограф|рентген/i.test(e), hl: hl.get(e) }));
     for (const [e, c] of hl) if (!list.includes(e)) out.extra.push({ exam: e, why: c.note || ("по жалобе: " + (labels("complaints", c.when.complaint) || "из анкеты").toLowerCase()), rule: c });
   }
-  for (const c of a.complaints || []) if (!RULES.complaints.some((r) => r.when.complaint === c)) out.doctor.push(`Хочет проверить: ${labels("complaints", c)}`);
-  for (const f of a.family_history || []) if (!RULES.complaints.some((r) => r.when.family_history === f)) out.doctor.push(`В семье: ${labels("family_history", f)} — обсудить с врачом раньше обычного возраста`);
+  // всё, что пациент рассказал о себе, — врачу (правил подбора по этим ответам нет, решает врач)
+  const lab = (id, list) => (list || []).filter((v) => v !== "none").map((v) => labels(id, v)).filter(Boolean);
+  const cond = lab("conditions", a.conditions), onReg = lab("registered_on", (a.registered_on || []).filter((c) => (a.conditions || []).includes(c)));
+  if (cond.length) out.doctor.push(`Есть или было: ${cond.join("; ")}`);
+  if (String(a.conditions_other || "").trim() && !(a.conditions || []).includes("none")) out.doctor.push(`Другое: ${String(a.conditions_other).trim()}`);
+  if (onReg.length) out.doctor.push(`На учёте: ${onReg.join("; ")}`);
+  const fam = lab("family_history", a.family_history);
+  if (fam.length) out.doctor.push(`В семье: ${fam.join("; ")}`);
+  const vis = (id) => { const q = BASE.find((x) => x.id === id); return q && visible(q, a) && a[id] !== undefined && a[id] !== ""; };
+  if (vis("last_period")) out.doctor.push(`Последние месячные: ${new Date(a.last_period).toLocaleDateString("ru-RU")}`);
+  if (vis("pregnancies")) out.doctor.push(`Беременностей: ${a.pregnancies}`);
+  if (vis("births")) out.doctor.push(`Родов: ${a.births}`);
+  if (vis("discharge_f") && a.discharge_f === "yes") out.doctor.push("Выделения из половых путей, запах — обсудить обследование на половые инфекции");
+  if (vis("dysuria_m") && a.dysuria_m === "yes") out.doctor.push("Боль, жжение при мочеиспускании, выделения — обсудить обследование на половые инфекции");
+  if (vis("contraception")) out.doctor.push(`Предохранение: ${labels("contraception", a.contraception)}`);
+  if (vis("medications") && String(a.medications).trim()) out.doctor.push(`Принимает сейчас: ${String(a.medications).trim()}`);
   return out;
 }
 
 function renderResult() {
   const a = state.answers, r = compute(a), el = $("#result");
   if (r.red) {
-    el.innerHTML = `<div class="red"><h3>Это не для чекапа</h3><p>Звоните <b>103</b> или обратитесь к врачу сегодня.</p>${r.red.reason ? `<p class="note">Причина: ${esc(r.red.reason)}</p>` : ""}<p class="note">Анкета остановлена. Подбор программы обследования не проводится.</p></div>` + jsonBox(a);
+    el.innerHTML = `<div class="red"><h3>Это не чекап</h3><p>Нужна помощь врача сегодня. При острой боли, одышке, слабости в руке или ноге — звоните <b>103</b>.</p>${r.red.reason ? `<p class="note">Причина: ${esc(r.red.reason)}</p>` : ""}<p class="note">Анкета остановлена. Подбор программы обследования не проводится.</p></div>` + jsonBox(a);
     return;
   }
-  if (r.age == null || !a.sex) { el.innerHTML = `<div class="res-h"><h2>Результат</h2></div><p class="empty">Укажите пол и год рождения — результат появится здесь.</p>` + jsonBox(a); return; }
+  if (r.age == null || !a.sex) { el.innerHTML = `<div class="res-h"><h2>Результат</h2></div><p class="empty">Укажите пол и дату рождения — результат появится здесь.</p>` + jsonBox(a); return; }
   const where = { green_clinic: "в Green Clinic", other: "в вашей поликлинике по прикреплению", unknown: "в поликлинике по прикреплению — уточните его на egov.kz" }[a.attached_to] || "в поликлинике по прикреплению";
-  const who = `${a.sex === "F" ? "Женщина" : "Мужчина"}${a.for_child === "child" ? " (ребёнок)" : ""}, ${r.age} ${plural(r.age)} в ${YEAR}`;
+  const fa = fullAge(a); const who = `${a.sex === "F" ? "Женщина" : "Мужчина"}${a.for_child === "child" ? " (ребёнок)" : ""}, ${fa ?? r.age} ${plural(fa ?? r.age)}${fa != null && fa !== r.age ? ` (в ${YEAR} исполняется ${r.age})` : ""}`;
   let h = `<div class="res-h"><h2>Результат</h2><span class="who">${who}</span></div><div class="blocks">`;
 
   h += `<div class="blk free"><div class="lbl">1 · Положено бесплатно</div>`;
   if (r.free.length) {
-    h += `<h3>Госскрининг ${where}, в течение 60 дней</h3><ul>` + r.free.map((s) => {
+    h += `<h3>По госпрограмме ${where}, в течение 60 дней</h3><ul>` + r.free.map((s) => {
       const preg = r.pregnant && s.id === "scr_breast";
-      return `<li><b>${esc(s.name)}</b>: ${esc(s.stage1.filter((x) => !/^Приём/.test(x)).join(", "))}${preg ? '<span class="flag">при беременности — обсудите с врачом</span>' : ""} <span class="src">${esc(s.source)}</span></li>`;
+      return `<li><b>${esc(plainName(s))}</b>: ${esc(plainWhat(s))}${preg ? '<span class="flag">при беременности — обсудите с врачом</span>' : ""} <br><span class="src">${esc(s.name)} · ${esc(s.source)}</span></li>`;
     }).join("") + `</ul>`;
   } else h += `<h3>В ${YEAR} году по возрасту скрининг не положен</h3>`;
-  if (r.notFree.length) h += `<ul class="meta">` + r.notFree.map((x) => `<li class="muted-li">${esc(x.s.name)}: ${esc(x.why)}</li>`).join("") + `</ul>`;
+  if (r.notFree.length) h += `<ul class="meta">` + r.notFree.map((x) => `<li class="muted-li">${esc(plainName(x.s))}: ${esc(x.why)}</li>`).join("") + `</ul>`;
   h += `</div>`;
 
   h += `<div class="blk paid"><div class="lbl">2 · Пакет PRIME</div>`;
@@ -389,7 +464,7 @@ function renderResult() {
 
   if (r.doctor.length) h += `<div class="blk doc"><div class="lbl">Для врача</div><h3>Отмечено в анкете</h3><ul>` + r.doctor.map((d) => `<li>${esc(d)}</li>`).join("") + `</ul></div>`;
 
-  const nexts = r.free.map((s) => `${s.name} — ${YEAR + s.repeat_years}`);
+  const nexts = r.free.map((s) => `${plainName(s)} — ${YEAR + s.repeat_years}`);
   if (nexts.length) h += `<div class="next"><span><b>Когда повторить бесплатно:</b></span>${nexts.map((n) => `<span>${esc(n)}</span>`).join("")}</div>`;
   h += `</div><div class="actions"><button class="btn pri" type="button" id="book">Записаться в PRIME</button><button class="btn" type="button" id="copy-in">Копировать вход для predict()</button></div>`;
   h += jsonBox(a);
@@ -399,9 +474,10 @@ function packYears(a) { if (!["smokes", "quit"].includes(a.smoke_status)) return
 function quitYears(a) { return a.smoke_status === "quit" ? Number(a.quit_years_ago) || 0 : 0; }
 function plural(n) { const m10 = n % 10, m100 = n % 100; return m10 === 1 && m100 !== 11 ? "год" : m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14) ? "года" : "лет"; }
 function predictInput(a) {
-  const o = { sex: a.sex, birth_year: a.birth_year, checkup_year: YEAR, for_child: a.for_child === "child", urgent: a.urgent || "none", pregnant: a.pregnant || null,
-    registered: a.registered || [], last_screening: Object.fromEntries((a.last_screening || []).map((s) => [s, YEAR - 1])), attached_to: a.attached_to || null,
-    complaints: a.complaints || [], family_history: a.family_history || [],
+  const o = { sex: a.sex, birth_date: a.birth_date || null, birth_year: birthYear(a), checkup_year: YEAR, for_child: a.for_child === "child", urgent: a.urgent || "none", pregnant: a.pregnant || null,
+    registered: regKeys(a), conditions: (a.conditions || []).filter((c) => c !== "none"), last_screening: Object.fromEntries((a.last_screening || []).map((s) => [s, YEAR - 1])), attached_to: a.attached_to || null,
+    family_history: (a.family_history || []).filter((f) => f !== "none"), last_period: a.last_period || null,
+    conditions_other: a.conditions_other || "", pregnancies: a.pregnancies === "" || a.pregnancies == null ? null : a.pregnancies, births: a.births === "" || a.births == null ? null : a.births, genital_symptoms: (a.sex === "F" ? a.discharge_f : a.dysuria_m) ? (a.sex === "F" ? a.discharge_f : a.dysuria_m) === "yes" : null, contraception: a.contraception || null, medications: a.medications || "",
     smoking: a.smoke_status ? { pack_years: Math.round(packYears(a) * 10) / 10, quit_years_ago: quitYears(a) } : null,
     hazardous_work_10y: a.hazardous_work_10y ? a.hazardous_work_10y === "yes" : null, custom: {} };
   for (const c of state.custom) if (a[c.id] !== undefined && a[c.id] !== "") {
@@ -427,14 +503,14 @@ function tab(which) {
 $("#tab-form").onclick = () => tab("form"); $("#tab-ed").onclick = () => tab("ed");
 
 /* ---------- редактор ---------- */
-const TYPE_RU = { single: "один вариант", multi: "несколько вариантов", number: "число", text: "текст" };
+const TYPE_RU = { single: "один вариант", multi: "несколько вариантов", number: "число", text: "текст", date: "дата", textarea: "текст" };
 let editing = null;
 function renderEditor() {
   const list = $("#ed-list");
   const rows = [...BASE.map((q) => ({ ...q, base: true })), ...state.custom].sort((x, y) => x.step - y.step);
   list.innerHTML = rows.map((q) => {
     if (q.base) { const off = state.hidden.includes(q.id);
-      return `<div class="ed-item base ${off ? "off" : ""}"><div><div class="t">${esc(q.text)}</div><div class="d">Шаг ${q.step} · ${TYPE_RU[q.type]} · базовый</div></div><div class="ed-btns">${["for_child","sex","birth_year","urgent"].includes(q.id) ? '<span class="note">нужен движку</span>' : `<button class="btn" data-hide="${q.id}">${off ? "Показать" : "Скрыть"}</button>`}</div></div>`; }
+      return `<div class="ed-item base ${off ? "off" : ""}"><div><div class="t">${esc(q.text)}</div><div class="d">Шаг ${q.step} · ${TYPE_RU[q.type]} · базовый</div></div><div class="ed-btns">${["for_child","sex","birth_date","urgent"].includes(q.id) ? '<span class="note">нужен движку</span>' : `<button class="btn" data-hide="${q.id}">${off ? "Показать" : "Скрыть"}</button>`}</div></div>`; }
     const i = state.custom.indexOf(q);
     const acts = (q.options || []).filter((o) => o.action).length;
     return `<div class="ed-item"><div><div class="t">${esc(q.text)}</div><div class="d">Шаг ${q.step} · ${TYPE_RU[q.type]}${q.sex ? " · " + (q.sex === "F" ? "женщинам" : "мужчинам") : ""}${acts ? ` · действий: ${acts}` : ""}</div></div><div class="ed-btns"><button class="btn" data-up="${i}" ${i === 0 ? "disabled" : ""} aria-label="Выше">↑</button><button class="btn" data-down="${i}" ${i === state.custom.length - 1 ? "disabled" : ""} aria-label="Ниже">↓</button><button class="btn" data-edit="${i}">Изменить</button><button class="btn danger" data-del="${i}">Удалить</button></div></div>`;
