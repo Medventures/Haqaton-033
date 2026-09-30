@@ -13,6 +13,10 @@
 | `complaints` | multiselect | `fatigue` усталость · `chest_pain` боль в груди | нет |
 | `family_history` | multiselect | `colorectal_cancer` рак кишечника у родственника | нет |
 | `risk_group` | multiselect | группы риска по гепатитам (см. `rules.json`, `scr_hepatitis`) | нет |
+| `for_child` | bool | для ребёнка — детский пакет | нет |
+| `urgent` | select | `chest_pain` · `dyspnea` · `stroke_signs` · `none` → любой кроме `none` = красный флаг, пакет не предлагать | да |
+| `pregnant` | select | `yes` · `no` · `unsure` (Ж 18–55) → без КТ/маммографии/рентгена, «обсудите с врачом» | нет |
+| `attached_to` | select | `green_clinic` · `other` · `unknown` → где делать бесплатную часть | нет |
 | `last_screening` | dict | `{"scr_breast": 2025, ...}` — год последнего скрининга; если не прошёл период — не предлагать | нет |
 
 ## Выход
