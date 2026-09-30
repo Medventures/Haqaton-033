@@ -21,6 +21,21 @@
 | `hazardous_work_10y` | bool | 10 лет на вредном производстве | нет |
 | `last_screening` | dict | `{"scr_breast": 2025, ...}` — год последнего скрининга; если не прошёл период — не предлагать | нет |
 
+Анкета (30.09.2026) передаёт ещё поля для врача и для блока «Сверх пакета» — на бесплатный скрининг не влияют:
+| Поле | Тип | Значения |
+|---|---|---|
+| `birth_date` | date | `ГГГГ-ММ-ДД`; `birth_year` берётся из неё. Пакет клиники — по полным годам, скрининг — по году (приказ) |
+| `conditions` | multiselect | что есть или было, простыми словами: `pressure` · `heart` · `diabetes` · `glaucoma` · `head_vessels` · `legs` · `breast` · `hpv` · `bowel` · `lungs` · `tb` · `hepatitis` · `urine` · `bleeding`; `registered` = отмеченные из них «на учёте», переведённые в коды выше |
+| `conditions_other` | text | свой вариант |
+| `last_period` | date | Ж: начало последних месячных |
+| `pregnancies`, `births` | number | Ж: беременностей, родов |
+| `contraception` | select | `none` · `condom` · `pills` · `iud` · `other` · `not_needed` |
+| `discharge` / `dysuria` | select | Ж: выделения, запах / М: боль, жжение при мочеиспускании, выделения — `yes` → «Сверх пакета»: обследование на половые инфекции (состав назначает врач) + гинеколог/уролог, если их нет в пакете |
+| `anesthesia_reaction`, `blood_thinners`, `allergy`, `companion` | select | наркоз, разжижающие кровь, аллергия, есть ли сопровождающий (после наркоза нельзя за руль) |
+| `medications` | text | что принимает сейчас |
+| `family_history` | multiselect | + `breast_cancer` · `other_cancer` · `early_cvd` · `hypertension` · `diabetes` · `tb` |
+`complaints` анкета больше не спрашивает (решение медэксперта 30.09.2026): жалобы убраны, болезни в семье расширены.
+
 ## Выход
 ```json
 {
