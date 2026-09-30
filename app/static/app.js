@@ -13,6 +13,7 @@ const reviewStep = steps.length - 1;
 let fields = [];
 let answers = {};
 let step = 0;
+let submitting = false;
 const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (c) => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
 const year = () => Number(answers.checkup_year || new Date().getFullYear());
 const birthYear = () => answers.birth_date ? Number(answers.birth_date.slice(0, 4)) : undefined;
@@ -79,6 +80,10 @@ function renderField(field) {
   return `<${tag} class="field" data-name="${field.name}">${input}${hint ? `<p class="hint" id="${id}-hint">${escapeHtml(hint)}</p>` : ''}</${tag}>`;
 }
 function render(focus = false) {
+  $('results-screen').hidden = true;
+  $('recommendation').hidden = true;
+  $('recommendation').replaceChildren();
+  document.querySelector('.progress-track').hidden = false;
   $('step-title').textContent = steps[step][0];
   $('step-description').textContent = steps[step][1];
   $('step-counter').textContent = step === reviewStep ? 'ПРОВЕРКА ОТВЕТОВ' : `ШАГ ${String(step + 1).padStart(2, '0')} / ${String(reviewStep).padStart(2, '0')}`;
@@ -158,6 +163,11 @@ $('skip').addEventListener('click', () => {
   render(true);
 });
 $('retry').addEventListener('click', loadFields);
+$('results-back').addEventListener('click', () => {
+  step = reviewStep;
+  render(true);
+  $('form-panel').scrollIntoView({ block: 'start' });
+});
 function collectInput() {
   const payload = {};
   for (const field of fields.filter(visible)) {
@@ -181,7 +191,7 @@ function displayValue(field) {
   return String(value);
 }
 function renderReview() {
-  $('review').innerHTML = '<p class="review-notice">Анкета заполнена. Подбор программы будет доступен позже. Сейчас можно проверить и изменить ответы.</p>' + steps.slice(0, reviewStep).map(([title], index) =>
+  $('review').innerHTML = '<p class="review-notice">Проверьте ответы и получите программу обследования по текущим правилам клиники.</p><button id="recommend" class="primary-button recommend-button" type="button">Подобрать программу <span aria-hidden="true">→</span></button><p id="recommend-status" class="hint" role="status" aria-live="polite"></p><p id="recommend-error" class="request-error" role="alert" hidden></p>' + steps.slice(0, reviewStep).map(([title], index) =>
     `<section class="review-section"><h3>${escapeHtml(title)}<button class="edit-button" type="button" data-edit="${index}" aria-label="Изменить раздел: ${escapeHtml(title)}">Изменить</button></h3><dl>` +
     fields.filter((field) => field.step === index && visible(field)).map((field) => `<dt>${escapeHtml(field.label)}</dt><dd>${escapeHtml(displayValue(field))}</dd>`).join('') + '</dl></section>'
   ).join('') + '<button id="restart" class="secondary-button" type="button">Заполнить заново</button>';
@@ -190,5 +200,95 @@ function renderReview() {
     render(true);
   }));
   $('restart').addEventListener('click', () => { defaults(); step = 0; render(true); });
+  $('recommend').addEventListener('click', submitRecommendation);
+}
+
+async function submitRecommendation() {
+  if (submitting) return;
+  submitting = true;
+  const button = $('recommend');
+  const controls = $('review').querySelectorAll('button');
+  controls.forEach((control) => { control.disabled = true; });
+  $('recommendation').hidden = true;
+  $('recommendation').setAttribute('aria-busy', 'true');
+  $('recommend-error').hidden = true;
+  button.innerHTML = '<span class="loading-spinner" aria-hidden="true"></span> Подбираем программу…';
+  $('recommend-status').textContent = 'Проверяем ответы и подбираем обследования по правилам клиники.';
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 20000);
+  try {
+    const response = await fetch('/recommendations', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(collectInput()), signal: controller.signal,
+    });
+    const data = await response.json();
+    if (!response.ok || data.error) throw new Error(data.error || 'Не удалось подобрать программу. Попробуйте снова.');
+    if (!Array.isArray(data.items) || !Array.isArray(data.red_flags)) throw new Error('Сервер вернул неполный результат. Попробуйте снова.');
+    renderRecommendation(data);
+    $('recommend-status').textContent = 'Ответ сервера получен.';
+    button.textContent = 'Подобрать ещё раз';
+    form.hidden = true;
+    $('review').hidden = true;
+    $('results-screen').hidden = false;
+    document.querySelector('.progress-track').hidden = true;
+    $('step-counter').textContent = 'РЕЗУЛЬТАТ ПОДБОРА';
+    $('step-title').textContent = 'Ваша программа обследования';
+    $('step-description').textContent = 'Программа подобрана по вашим ответам. Состав обследований необходимо обсудить с врачом.';
+    $('step-title').focus();
+    $('form-panel').scrollIntoView({ block: 'start' });
+  } catch (error) {
+    $('recommend-status').textContent = '';
+    $('recommend-error').textContent = error.name === 'AbortError'
+      ? 'Сервер не ответил вовремя. Ответы сохранены в этой вкладке — попробуйте снова.'
+      : error instanceof TypeError || error instanceof SyntaxError
+        ? 'Не удалось получить программу. Проверьте подключение и попробуйте снова.' : error.message;
+    $('recommend-error').hidden = false;
+    button.textContent = 'Попробовать снова';
+  } finally {
+    clearTimeout(timeout);
+    submitting = false;
+    controls.forEach((control) => { control.disabled = false; });
+    $('recommendation').setAttribute('aria-busy', 'false');
+  }
+}
+
+function renderRecommendation(data) {
+  const list = (values) => `<ul class="exam-list">${values.map((value) => `<li>${escapeHtml(value)}</li>`).join('')}</ul>`;
+  let html = '';
+  if (data.red_flags.length) {
+    html = `<div class="urgent-alert"><h3 id="result-title" tabindex="-1">Обратитесь за медицинской помощью</h3>${list(data.red_flags)}<a class="emergency-call" href="tel:103">Позвонить 103 ↗</a></div>`;
+  } else {
+    const pack = data.package;
+    html = `<div class="package-card"><span class="eyebrow">ВАША ПРОГРАММА</span><h3 id="result-title" tabindex="-1">${escapeHtml(pack ? pack.name : 'Индивидуальная консультация')}</h3><p>${pack ? 'Платный пакет PRIME · ' + (pack.price == null ? 'Стоимость уточните в клинике' : escapeHtml(pack.price)) : 'Подходящего пакета в текущих правилах нет.'}</p><p class="hint">Возраст в году обследования: ${escapeHtml(data.age_year)}. Программу необходимо обсудить с врачом.</p></div>`;
+    html += (data.warnings || []).map((warning) => `<p class="review-notice">${escapeHtml(warning)}</p>`).join('');
+    if (pack) {
+      const exams = data.items.filter((item) => item.rule_id === pack.id);
+      html += '<section class="result-section"><h3>В составе пакета</h3><ul class="exam-list">' + exams.map((item) =>
+        `<li>${escapeHtml(item.exam)}${item.highlights?.length ? `<p class="hint">Важно с учётом анкеты: ${escapeHtml(item.highlights.join('; '))}. Рекомендация клиники, уточните у врача.</p>` : ''}</li>`
+      ).join('') + '</ul></section>';
+    }
+    if (data.screenings?.length) {
+      html += '<section class="result-section"><h3>Бесплатные скрининги</h3><p class="hint">Доступны отдельно от платного пакета. Совпадающие обследования можно обсудить с врачом — обе возможности сохранены.</p>' + data.screenings.map((screening) =>
+        `<article class="screening-card"><span class="result-badge">${screening.payment === 'free_osms' ? 'ОСМС' : 'ГОБМП'}</span><h4>${escapeHtml(screening.name)}</h4><p class="hint">${escapeHtml(screening.where)}</p>${list(screening.stage1)}${screening.stage2_note ? `<p class="hint">${escapeHtml(screening.stage2_note)}</p>` : ''}<p class="hint">Источник: ${escapeHtml(screening.source)}</p></article>`
+      ).join('') + '</section>';
+    }
+    if (data.additions?.length) {
+      html += '<section class="result-section"><h3>Сверх пакета</h3><p class="hint">Рекомендации клиники, уточните у врача. Услуги оплачиваются отдельно.</p>' + data.additions.map((item) =>
+        `<article class="screening-card"><h4>${escapeHtml(item.name)}</h4><p class="hint">С учётом ответа: ${escapeHtml(item.why.join('; '))}.</p></article>`
+      ).join('') + '</section>';
+    }
+    if (data.not_eligible?.length) {
+      html += '<details class="result-section"><summary>Почему некоторые скрининги не предложены</summary>' + data.not_eligible.map((item) =>
+        `<p class="hint"><strong>${escapeHtml(item.name)}</strong><br>${escapeHtml(item.why)}</p>`
+      ).join('') + '</details>';
+    }
+    if (data.preparation?.length) {
+      html += '<details class="result-section"><summary>Подготовка к обследованию</summary>' + data.preparation.map((item) =>
+        `<p class="hint"><strong>${escapeHtml(item.title)}</strong><br>${escapeHtml(item.text)}</p>`
+      ).join('') + '</details>';
+    }
+  }
+  $('recommendation').innerHTML = html;
+  $('recommendation').hidden = false;
 }
 loadFields();
