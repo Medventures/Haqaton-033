@@ -1,20 +1,59 @@
-"""
-Single source of truth for the input form.
-When the real task/data drop at T0, edit FIELDS below — the page
-(/app/static/app.js) renders the form from this list automatically.
+﻿"""Questionnaire schema from spec/CONTRACT.md. Extend FIELDS to add inputs.
 
-type: "number" | "text" | "select" | "multiselect"
+Conditions control both visibility and payload serialization. Steps are zero-based.
 """
-
 FIELDS = [
-    {"name": "age", "label": "Age", "type": "number"},
-    {"name": "sex", "label": "Sex", "type": "select", "options": ["m", "f"]},
-    {"name": "symptoms", "label": "Symptoms", "type": "multiselect",
-     "options": ["chest_pain", "shortness_of_breath", "dizziness", "mild_headache"]},
-    {"name": "history", "label": "History", "type": "multiselect",
-     "options": ["hypertension", "diabetes"]},
-    {"name": "vitals.hr", "label": "Heart rate", "type": "number"},
-    {"name": "vitals.sbp", "label": "Systolic BP", "type": "number"},
-    {"name": "vitals.spo2", "label": "SpO2", "type": "number"},
-    {"name": "free_text", "label": "Notes", "type": "text"},
+    {"name": "for_child", "label": "Для кого подбираем программу?", "type": "boolean", "step": 0,
+     "default": False, "options": [[False, "Для себя"], [True, "Для ребёнка"]]},
+    {"name": "sex", "label": "Пол", "type": "select", "step": 0, "required": True,
+     "options": [["M", "Мужской"], ["F", "Женский"]]},
+    {"name": "birth_year", "label": "Год рождения", "type": "number", "step": 0,
+     "required": True, "min": 1920, "max": 2025, "placeholder": "Например, 1984",
+     "hint": "Год рождения человека, для которого заполняете анкету."},
+    {"name": "checkup_year", "label": "Год обследования", "type": "number", "step": 0,
+     "default": "current_year", "min": 1920, "max": 9999},
+    {"name": "urgent", "label": "Что-то беспокоит прямо сейчас?", "type": "select", "step": 1,
+     "required": True, "layout": "stack", "options": [
+         ["chest_pain", "Боль или давление в груди"], ["dyspnea", "Сильная одышка"],
+         ["stroke_signs", "Внезапная слабость в руке или ноге, нарушение речи"],
+         ["none", "Нет, ничего из перечисленного"]]},
+    {"name": "pregnant", "label": "Беременны или можете быть беременны?", "type": "select", "step": 1,
+     "show_if": {"sex": "F", "age_min": 18, "age_max": 55},
+     "options": [["yes", "Да"], ["no", "Нет"], ["unsure", "Не уверена"]],
+     "hint": "Если да или не уверены, обсудите обследования с врачом."},
+    {"name": "registered", "label": "Состоите на учёте у врача?", "type": "multiselect", "step": 2,
+     "hint": "Выберите всё подходящее. Если нет — оставьте без выбора.", "options": [
+         ["hypertension", "Гипертония"], ["ihd", "Ишемическая болезнь сердца"],
+         ["diabetes", "Сахарный диабет"], ["glaucoma", "Глаукома"],
+         ["cerebrovascular", "Инсульт / сосуды головного мозга"],
+         ["breast_cancer", "Онкология молочной железы"], ["cervical_cancer", "Онкология шейки матки"],
+         ["colorectal", "Онкология / полипы кишечника"]]},
+    {"name": "last_screening.scr_breast", "label": "Маммография", "type": "number", "step": 2,
+     "section": "screening", "min": 1920, "max": "checkup_year",
+     "show_if": {"sex": "F", "age_min": 40, "age_max": 76}},
+    {"name": "last_screening.scr_cervix", "label": "Мазок / ПАП-тест", "type": "number", "step": 2,
+     "section": "screening", "min": 1920, "max": "checkup_year",
+     "show_if": {"sex": "F", "age_min": 30, "age_max": 74}},
+    {"name": "last_screening.scr_colorectal", "label": "Тест на скрытую кровь", "type": "number", "step": 2,
+     "section": "screening", "min": 1920, "max": "checkup_year",
+     "show_if": {"age_min": 50, "age_max": 76}},
+    {"name": "last_screening.scr_cvd", "label": "Анализы на холестерин и сахар", "type": "number", "step": 2,
+     "section": "screening", "min": 1920, "max": "checkup_year",
+     "show_if": {"age_min": 40, "age_max": 76}},
+    {"name": "attached_to", "label": "Вы прикреплены к поликлинике?", "type": "select", "step": 2,
+     "layout": "stack", "options": [["green_clinic", "К Green Clinic"], ["other", "К другой поликлинике"],
+     ["unknown", "Не знаю"]]},
+    {"name": "complaints", "label": "Что вас беспокоит?", "type": "multiselect", "step": 3,
+     "options": [["fatigue", "Постоянная усталость"], ["chest_pain", "Боль в груди"]],
+     "hint": "Можно выбрать несколько ответов или оставить без выбора."},
+    {"name": "family_history", "label": "Был ли рак кишечника у близких родственников?", "type": "multiselect", "step": 3,
+     "options": [["colorectal_cancer", "Да, у родителя, брата или сестры"]],
+     "hint": "Если нет или не знаете — оставьте без выбора."},
+    {"name": "risk_group", "label": "Относитесь ли вы к группе риска по гепатитам?", "type": "multiselect", "step": 3,
+     "hint": "Необязательно. Отметьте только то, что вам известно.", "layout": "stack", "options": [
+         ["medical_worker_invasive", "Медработник, выполняющий инвазивные процедуры"],
+         ["planned_surgery", "Плановая операция"],
+         ["hemodialysis_oncology_hematology", "Гемодиализ / лечение в онкологии или гематологии"],
+         ["transfusion_transplant", "Переливание крови / трансплантация"],
+         ["pregnancy", "Беременность"], ["hiv_key_population", "ВИЧ / ключевые группы риска"]]},
 ]
