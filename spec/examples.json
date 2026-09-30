@@ -4,7 +4,9 @@
   "input": {
    "sex": "F",
    "birth_year": 1984,
-   "checkup_year": 2026
+   "checkup_year": 2026,
+   "pregnant": "no",
+   "urgent": "none"
   },
   "expect": {
    "age_year": 42,
@@ -24,7 +26,8 @@
   "input": {
    "sex": "M",
    "birth_year": 1976,
-   "checkup_year": 2026
+   "checkup_year": 2026,
+   "urgent": "none"
   },
   "expect": {
    "age_year": 50,
@@ -44,7 +47,9 @@
   "input": {
    "sex": "F",
    "birth_year": 1996,
-   "checkup_year": 2026
+   "checkup_year": 2026,
+   "pregnant": "no",
+   "urgent": "none"
   },
   "expect": {
    "age_year": 30,
@@ -62,7 +67,9 @@
   "input": {
    "sex": "F",
    "birth_year": 1985,
-   "checkup_year": 2026
+   "checkup_year": 2026,
+   "pregnant": "no",
+   "urgent": "none"
   },
   "expect": {
    "age_year": 41,
@@ -82,7 +89,11 @@
    "checkup_year": 2026,
    "registered": [
     "colorectal"
-   ]
+   ],
+   "provenance": {
+    "registered": "confirmed_clinician"
+   },
+   "urgent": "none"
   },
   "expect": {
    "age_year": 52,
@@ -106,7 +117,12 @@
    "checkup_year": 2026,
    "registered": [
     "hypertension"
-   ]
+   ],
+   "pregnant": "no",
+   "provenance": {
+    "registered": "confirmed_clinician"
+   },
+   "urgent": "none"
   },
   "expect": {
    "age_year": 42,
@@ -127,7 +143,8 @@
   "input": {
    "sex": "M",
    "birth_year": 2016,
-   "checkup_year": 2026
+   "checkup_year": 2026,
+   "urgent": "none"
   },
   "expect": {
    "age_year": 10,
@@ -145,7 +162,9 @@
    "checkup_year": 2026,
    "last_screening": {
     "scr_breast": 2025
-   }
+   },
+   "pregnant": "no",
+   "urgent": "none"
   },
   "expect": {
    "age_year": 42,
@@ -169,7 +188,8 @@
    "checkup_year": 2026,
    "complaints": [
     "chest_pain"
-   ]
+   ],
+   "urgent": "chest_pain"
   },
   "expect": {
    "age_year": 45,
@@ -190,7 +210,9 @@
    ],
    "family_history": [
     "colorectal_cancer"
-   ]
+   ],
+   "pregnant": "no",
+   "urgent": "none"
   },
   "expect": {
    "age_year": 35,
@@ -215,7 +237,8 @@
    "smoking": {
     "pack_years": 25,
     "quit_years_ago": 0
-   }
+   },
+   "urgent": "none"
   },
   "expect": {
    "age_year": 52,
@@ -237,7 +260,8 @@
    "sex": "F",
    "birth_year": 1982,
    "checkup_year": 2026,
-   "pregnant": "yes"
+   "pregnant": "yes",
+   "urgent": "none"
   },
   "expect": {
    "age_year": 44,

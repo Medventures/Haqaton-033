@@ -1,14 +1,6 @@
-.venv/
 __pycache__/
 *.pyc
-app/offline/cache.jsonl
-
-# real patient data / large model files never go in the repo
-*.csv
-*.parquet
-ml/models/*.bin
-ml/models/*.pt
-ml/models/*.safetensors
-ml/data/
-
-AGENTS.MD
+.pytest_cache/
+dist/
+qa_style/
+static/img/prep/_runtime/
